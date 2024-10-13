@@ -1,8 +1,11 @@
 import React from 'react'
+import BackNavigation from '../../components/pagecomponents/BackNavigation';
 
 const Services = () => {
   return (
-    <div>Services</div>
+    <div className='w-full'>
+      <BackNavigation label="Services" />
+    </div>
   )
 }
 

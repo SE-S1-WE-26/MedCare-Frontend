@@ -19,7 +19,9 @@ root.render(
   <BrowserRouter>
     <React.StrictMode>
       <ThemeProvider value={customTheme}>
-        <App />
+        <div className="relative z-0 bg-primary">
+          <App />
+        </div>
       </ThemeProvider>
     </React.StrictMode>
   </BrowserRouter>
