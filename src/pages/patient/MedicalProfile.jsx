@@ -82,7 +82,7 @@ const MedicalProfile = () => {
             <p className="font-medium">Demographic Data</p>
             <TfiAlignJustify />
           </div>
-          <div className={`flex justify-between ${isDemoOpen ? "block" : "hidden"} lg:block`}>
+          <div className={`flex justify-between ${isDemoOpen ? "block" : "hidden"} lg:flex`}>
             <div className="space-y-1 text-sm lg:text-base">
               {patientDetails.demographics.map((item, index) => (
                 <p key={index}>{item.label}</p>
