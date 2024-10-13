@@ -11,6 +11,9 @@ import StaffDashboard from '../../pages/staff/Dashboard';
 
 import PatientAppointments from '../../pages/patient/Appointments';
 import PatientServices from '../../pages/patient/Services';
+import MedicalRecords from '../../pages/patient/MedicalRecords';
+import LabReports from '../../pages/patient/LabReports';
+import MedicalProfile from '../../pages/patient/MedicalProfile';
 
 import StaffPatients from '../../pages/staff/Patients';
 import StaffStaff from '../../pages/staff/Staff';
@@ -27,6 +30,9 @@ const AppRoutes = ({ setUserRole }) => {
 
       <Route path="/patient/appointments" element={<PatientAppointments />} />
       <Route path="/patient/services" element={<PatientServices />} />
+      <Route path="/patient/medical-records" element={<MedicalRecords />} />
+      <Route path="/patient/lab-reports" element={<LabReports />} />
+      <Route path="/patient/medical-profile" element={<MedicalProfile />} />
 
       <Route path="/staff/patients" element={<StaffPatients />} />
       <Route path="/staff/staff" element={<StaffStaff />} />

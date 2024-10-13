@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Header, Footer } from '..';
-import AppRoutes from '../../components/common/AppRoutes'; // Make sure this import is correct
+import AppRoutes from '../../components/common/AppRoutes'; 
 
 const Layout = () => {
-  const [userRole, setUserRole] = useState(null); // State to hold user role
+  const [userRole, setUserRole] = useState(null);
 
   useEffect(() => {
-    // Retrieve user role from localStorage on component mount
     const storedUserRole = localStorage.getItem('userRole');
     if (storedUserRole) {
       setUserRole(storedUserRole);
@@ -15,13 +14,16 @@ const Layout = () => {
 
   const handleSetUserRole = (role) => {
     setUserRole(role);
-    localStorage.setItem('userRole', role); // Save role to localStorage
+    localStorage.setItem('userRole', role);
   };
 
   return (
-    <div className='bg-light-blue h-screen w-screen flex flex-col'>
-      <Header userRole={userRole} setUserRole={handleSetUserRole} /> {/* Pass props */}
-      <AppRoutes setUserRole={handleSetUserRole} /> {/* Pass setUserRole here */}
+    <div className='bg-light-blue min-h-screen min-w-screen flex flex-col'>
+      <Header userRole={userRole} setUserRole={handleSetUserRole} />
+      {/* Flex-1 to ensure this section takes the remaining space */}
+      <div className='flex-1 flex px-8 py-8 w-full h-full overflow-hidden'>
+        <AppRoutes setUserRole={handleSetUserRole} />
+      </div>
       <Footer />
     </div>
   );
