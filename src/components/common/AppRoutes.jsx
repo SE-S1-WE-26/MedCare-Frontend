@@ -38,7 +38,11 @@ const AppRoutes = ({ setUserRole }) => {
       <Route path="/patient/medical-records" element={<MedicalRecords />} />
       <Route path="/patient/lab-reports" element={<LabReports />} />
       <Route path="/patient/medical-profile" element={<MedicalProfile />} />
-
+      <Route path="/patient/biographic-form" element={<DemographicForm />} />
+      <Route path="/patient/demographic-form" element={<BiographicForm />} />
+      <Route path="/patient/appointments/create-appointment" element={<CreateAppointment />} />
+      <Route path="/patient/appointments/appointment-form" element={<AppointmentForm />} />
+      <Route path="/patient/payment-form" element={<PaymentForm />} />
       <Route path="/staff/patients" element={<StaffPatients />} />
       <Route path="/staff/staff" element={<StaffStaff />} />
     </Routes>

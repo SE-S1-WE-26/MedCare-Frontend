@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   Typography,
@@ -8,62 +8,11 @@ import {
 } from "@material-tailwind/react";
 import images from "../../../constants/images";
 import { HiOutlineChatAlt2, HiOutlineInformationCircle } from "react-icons/hi";
-
+import axios from "axios";
+import icons from "../../../constants/images";
+import { Navigate } from "react-router-dom";
 // Sample Data
-const TABLE_HEAD = ["Doctor", "Doctor Type", "Appointment", "Action"];
-const TABLE_ROWS = [
-  {
-    date: "01/01/2023",
-    time: "10:00 AM",
-    doctorName: "Dr. Smith",
-    doctorType: "General Practitioner",
-    doctorPic: images.doctor, // Example profile picture URL
-    purpose: "Annual Check-up",
-    notes: "Routine examination and health screening.",
-    additionalInfo: "All tests normal, next check-up in one year.",
-  },
-  {
-    date: "15/03/2023",
-    time: "02:00 PM",
-    doctorName: "Dr. Johnson",
-    doctorType: "Cardiologist",
-    doctorPic: images.doctor,
-    purpose: "Follow-up on High Blood Pressure",
-    notes: "Review medication and blood pressure readings.",
-    additionalInfo: "Increase Lisinopril dosage if readings remain high.",
-  },
-  {
-    date: "10/06/2023",
-    time: "11:30 AM",
-    doctorName: "Dr. Lee",
-    doctorType: "Pediatrician",
-    doctorPic: images.doctor,
-    purpose: "Consultation for Cold Symptoms",
-    notes: "Prescribed Ibuprofen for fever.",
-    additionalInfo: "Monitor symptoms; follow up if they worsen.",
-  },
-  {
-    date: "20/08/2023",
-    time: "09:00 AM",
-    doctorName: "Dr. Brown",
-    doctorType: "Dermatologist",
-    doctorPic: images.doctor,
-    purpose: "Skin Rash Examination",
-    notes: "Performed allergy test.",
-    additionalInfo: "Recommended topical cream for treatment.",
-  },
-  {
-    date: "05/09/2023",
-    time: "03:15 PM",
-    doctorName: "Dr. White",
-    doctorType: "Orthopedist",
-    doctorPic: images.doctor,
-    purpose: "Knee Pain Consultation",
-    notes: "X-ray taken; advised physiotherapy.",
-    additionalInfo: "Follow-up appointment scheduled for 2 weeks later.",
-  },
-];
-
+const TABLE_HEAD = ["Appointment", "Appointment Type", "Appointment", "Action"];
 
 // Function to truncate text
 const truncateText = (text, maxLength) => {
@@ -73,6 +22,43 @@ const truncateText = (text, maxLength) => {
 
 const AppointmentsTable = () => {
   const [openIndex, setOpenIndex] = useState(null);
+  const [appointment, setAppointment] = useState([]);
+
+  const Host_Ip = process.env.Host_Ip || "http://localhost:8010";
+
+
+  const fetchAppointmentDetails = async () => {
+    try {
+      // Fetch Demographic Data
+      const appointmentResponse = await axios.get(
+        `${Host_Ip}/patient/appointments/`
+      );
+
+      setAppointment(appointmentResponse.data);
+    } catch (error) {
+      console.error("Error fetching appointment details:", error);
+    }
+  };
+
+  useEffect(() => {
+
+    fetchAppointmentDetails();
+  }, []);
+
+  const handleDelete = (Id) => {
+    console.log(Id);
+    axios
+      .delete(`${Host_Ip}/patient/appointments/${Id}`)
+      .then(() => {
+        alert("Appoinment deleted successfully!");
+        fetchAppointmentDetails();
+        //Navigate("/patient/appointments");
+        // Clear the search query after deletion
+      })
+      .catch((err) => {
+        alert(err.message);
+      });
+  };
 
   const handleToggleAccordion = (index) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -102,15 +88,16 @@ const AppointmentsTable = () => {
             </tr>
           </thead>
           <tbody>
-            {TABLE_ROWS.map(
+            {appointment.map(
               (
                 {
-                  doctorPic,
+                  _id,
+                  appointmentPic,
                   doctorName,
                   doctorType,
                   date,
                   time,
-                  purpose,
+                  problem,
                   notes,
                   additionalInfo,
                 },
@@ -122,11 +109,11 @@ const AppointmentsTable = () => {
                 return (
                   <React.Fragment key={doctorName + date}>
                     <tr>
-                      {/* Doctor Profile */}
+                      {/* Appointment Profile */}
                       <td className={classes}>
                         <div className="flex items-center">
                           <img
-                            src={doctorPic}
+                            src={icons.doctor}
                             alt={doctorName}
                             className="w-12 h-12 rounded-xl bg-light-blue mr-4"
                           />
@@ -140,7 +127,7 @@ const AppointmentsTable = () => {
                         </div>
                       </td>
 
-                      {/* Doctor Type */}
+                      {/* Appointment Type */}
                       <td className={classes}>
                         <Typography
                           variant="small"
@@ -158,7 +145,7 @@ const AppointmentsTable = () => {
                           color="blue-gray"
                           className="font-normal font-poppins font-medium text-xs" // Smaller text
                         >
-                          {date} at {time}
+                          {new Date(date).toLocaleDateString()} at {time}
                         </Typography>
                       </td>
 
@@ -174,6 +161,15 @@ const AppointmentsTable = () => {
                             size="sm"
                           >
                             {isOpen ? "See Less" : "See More"}
+                          </Button>
+                          <Button
+                            color="red"
+                            size="sm"
+                            onClick={() => {
+                              handleDelete(_id);
+                            }}
+                          >
+                            Delete
                           </Button>
                         </div>
                       </td>
@@ -226,15 +222,15 @@ const AppointmentsTable = () => {
 
       {/* Mobile View */}
       <div className="lg:hidden">
-        {TABLE_ROWS.map(
+        {appointment.map(
           (
             {
-              doctorPic,
+              appointmentPic,
               doctorName,
               doctorType,
               date,
               time,
-              purpose,
+              problem,
               notes,
               additionalInfo,
             },
@@ -247,18 +243,18 @@ const AppointmentsTable = () => {
                 key={doctorName + date}
                 className="border-b border-blue-gray-100 p-4"
               >
-                {/* Doctor Info Row */}
+                {/* Appointment Info Row */}
                 <div className="flex items-center">
-                  {/* Doctor Profile Picture */}
+                  {/* Appointment Profile Picture */}
                   <div className="flex-shrink-0 w-20 h-20">
                     <img
-                      src={doctorPic}
+                      src={appointmentPic}
                       alt={doctorName}
                       className="h-full w-full rounded-xl bg-light-blue object-cover"
                     />
                   </div>
 
-                  {/* Doctor Info and Appointment Date & Time */}
+                  {/* Appointment Info and Appointment Date & Time */}
                   <div className="ml-4 flex-1 flex flex-col justify-center">
                     <Typography
                       variant="small"
