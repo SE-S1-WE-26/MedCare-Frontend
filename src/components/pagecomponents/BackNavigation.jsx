@@ -16,10 +16,10 @@ const BackNavigation = ({ defaultRoute = -1, label, className = "" }) => {
   return (
     <button 
       onClick={handleGoBack} 
-      className={`flex flex-row items-center mb-8 ${className}`} // Include additional class if provided
+      className={`flex items-center mb-2 p-2 ${className}`} // Include additional class if provided
     >
-      <HiOutlineArrowCircleLeft className='w-10 h-10 mr-2 md:w-12 md:h-12' /> {/* Smaller icon for mobile */}
-      <p className='text-2xl font-bold md:text-3xl'>{label}</p> {/* Responsive text size */}
+      <HiOutlineArrowCircleLeft className='w-10 h-10 mr-2 md:w-12 md:h-12' /> {/* Larger icon for larger screens */}
+      <p className='text-lg md:text-2xl font-bold'>{label}</p> {/* Responsive text size */}
     </button>
   );
 };

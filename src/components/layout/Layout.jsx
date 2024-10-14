@@ -21,7 +21,7 @@ const Layout = () => {
     <div className='bg-light-blue min-h-screen min-w-screen flex flex-col'>
       <Header userRole={userRole} setUserRole={handleSetUserRole} />
       {/* Flex-1 to ensure this section takes the remaining space */}
-      <div className='flex-1 flex px-8 py-8 w-full h-full overflow-hidden'>
+      <div className='flex-1 flex p-3 lg:p-8 w-full h-full overflow-hidden'>
         <AppRoutes setUserRole={handleSetUserRole} />
       </div>
       <Footer />

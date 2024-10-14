@@ -5,7 +5,7 @@ import AppointmentsTable from '../../components/pagecomponents/patient/Appointme
 const Appointments = () => {
   return (
     <div className='w-full'>
-      <PageTitle label="Appointments" />
+      <PageTitle label="Booked Appointments" btn={true} btnTitle={'Make An Appointment'} link={'/patient/appointments/create-appointment'} btnStyle={'bg-green'}/>
       <AppointmentsTable />
     </div>
   )

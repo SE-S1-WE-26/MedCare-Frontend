@@ -1,3 +1,4 @@
+import { Typography } from '@material-tailwind/react';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -18,7 +19,7 @@ const StaffHeader = () => {
 
   const renderMenu = sections.map((section, index) => (
     <div key={index} onClick={() => handleMenuClick(section.link)} className="cursor-pointer w-full">
-      <button className={`w-full px-4 py-2 border-2 rounded-lg border-light-blue bg-dark-blue ${selected === section.link ? "bg-light-blue" : ""}`}>
+      <button className={`w-full px-4 py-2 border rounded-lg border-light-blue bg-dark-blue ${selected === section.link ? "bg-light-blue" : ""}`}>
         <p className={`font-medium ${selected === section.link ? "text-black" : "text-white"}`}>
           {section.title}
         </p>
@@ -29,8 +30,12 @@ const StaffHeader = () => {
   return (
     <div className='flex flex-col md:flex-row gap-2 w-full'>
       {renderMenu}
-      <button className="button w-full">Scan QR</button> {/* Ensure full width */}
-      <button className="border-2 rounded-full w-full">Profile</button> {/* Ensure full width */}
+      <div className="flex flex-row gap-2 w-full justify-between"> {/* Changed to flex-col for mobile view */}
+        <button className="flex-1 p-2 bg-light-blue rounded-lg w-20 justify-center"> {/* Ensure full width for both buttons */}
+          <Typography className='font-poppins text-xs'>Scan QR</Typography>
+        </button>
+        <button className="flex-1 border-2 rounded-full">Profile</button>
+      </div>
     </div>
   );
 };

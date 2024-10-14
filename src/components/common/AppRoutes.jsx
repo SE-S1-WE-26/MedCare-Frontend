@@ -16,6 +16,9 @@ import LabReports from '../../pages/patient/LabReports';
 import MedicalProfile from '../../pages/patient/MedicalProfile';
 import DemographicForm from '../../pages/patient/DemographicForm';
 import BiographicForm from '../../pages/patient/BiographicForm';
+import CreateAppointment from '../../pages/patient/CreateAppointment';
+import AppointmentForm from '../../pages/patient/AppointmentForm';
+import PaymentForm from '../../pages/patient/PaymentForm';
 
 import StaffPatients from '../../pages/staff/Patients';
 import StaffStaff from '../../pages/staff/Staff';
@@ -35,8 +38,6 @@ const AppRoutes = ({ setUserRole }) => {
       <Route path="/patient/medical-records" element={<MedicalRecords />} />
       <Route path="/patient/lab-reports" element={<LabReports />} />
       <Route path="/patient/medical-profile" element={<MedicalProfile />} />
-      <Route path="/patient/demographic-form" element={<DemographicForm />} />
-      <Route path="/patient/biographic-form" element={<BiographicForm />} />
 
       <Route path="/staff/patients" element={<StaffPatients />} />
       <Route path="/staff/staff" element={<StaffStaff />} />
