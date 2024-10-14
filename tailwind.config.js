@@ -14,6 +14,7 @@ module.exports = withMT({
       colors : {
         'dark-blue': '#0E1E3D',
         'light-blue': '#E5EDFF',
+        'green': '#27E58A',
       },
       height: {
         '1/3': '33.333333%',

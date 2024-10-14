@@ -1,6 +1,7 @@
 import { React, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import icons from "../../constants/icons";
+import { Card } from '@material-tailwind/react';
 
 const Dashboard = () => {
   const [selected, setSelected] = useState("/");
@@ -39,7 +40,7 @@ const Dashboard = () => {
       onClick={() => handleMenuClick(section.link)}
       className="cursor-pointer w-full"
     >
-      <button
+      <Card
         className={`w-full px-6 py-10 border-2 rounded-3xl border-light-blue flex justify-center items-center ${
           selected === section.link ? "bg-light-blue" : section.color
         }`}
@@ -52,21 +53,22 @@ const Dashboard = () => {
         >
           {section.title}
         </p>
-      </button>
+      </Card>
     </div>
   ));
 
   return (
-    <div className="flex h-full w-full gap-6">
+    <div className="flex flex-col md:flex-row h-full w-full gap-6">
       {/* Left Menu */}
-      <div className="w-1/2 flex flex-col gap-6">
+      <div className="w-full md:w-1/2 flex flex-col gap-6">
         {renderMenu}
       </div>
 
       {/* Right Content Area */}
-      <div className="w-1/2 bg-white rounded-3xl p-8 ">
+      <Card className="w-full md:w-1/2 bg-white rounded-3xl p-8">
         {/* This is the right-side content area */}
-      </div>
+        {/* You can add content or components here as needed */}
+      </Card>
     </div>
   );
 };
