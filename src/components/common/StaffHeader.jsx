@@ -1,6 +1,8 @@
 import { Typography } from '@material-tailwind/react';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import images from '../../constants/images';
+import icons from '../../constants/icons';
 
 const StaffHeader = () => {
   const [selected, setSelected] = useState("/");
@@ -32,13 +34,22 @@ const StaffHeader = () => {
   ));
 
   return (
-    <div className='flex flex-col md:flex-row gap-2 w-full'>
+    <div className="flex flex-col md:flex-row gap-2 w-full">
       {renderMenu}
-      <div className="flex flex-row gap-2 w-full justify-between"> {/* Changed to flex-col for mobile view */}
-        <button className="flex-1 p-2 bg-light-blue rounded-lg w-20 justify-center" onClick={handleScanQR}> {/* Ensure full width for both buttons */}
-          <Typography className='font-poppins text-xs'>Scan QR</Typography>
+      <div className="flex flex-row gap-2 w-full justify-between">
+        <button 
+          className="flex-1 p-2 bg-light-blue rounded-lg w-10 flex items-center justify-center" 
+          onClick={handleScanQR}
+        > 
+          <img src={icons.scan} alt="QR" className="w-6 h-6" />
         </button>
-        <button className="flex-1 border-2 rounded-full">Profile</button>
+        <button className="flex-1 border-2 rounded-full w-14">
+          <img
+            src={images.doctor}
+            alt="Profile"
+            className="object-cover w-full h-full rounded-full"
+          />
+        </button>
       </div>
     </div>
   );

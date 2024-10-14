@@ -2,9 +2,9 @@ import { React, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import icons from "../../constants/icons";
 import { Card } from "@material-tailwind/react";
-import PageTitle from "../../components/pagecomponents/PageTitle"; // Assuming you're using PageTitle here too
+import PageTitle from "../../components/pagecomponents/PageTitle"; // Assuming you're using PageTitle here
 
-const Dashboard = () => {
+const StaffDashboard = () => {
   const [selected, setSelected] = useState("/");
   const navigate = useNavigate();
 
@@ -61,9 +61,11 @@ const Dashboard = () => {
   return (
     <div className="flex flex-col md:flex-row h-full w-full gap-6">
       {/* Left Menu */}
-      <PageTitle label="Staff Dashboard" /> {/* Assuming you want to use PageTitle here */}
-      <div className="w-full md:w-1/2 flex flex-col gap-6 -mt-6">
-        {renderMenu}
+      <div className="w-full md:w-1/2 rounded-3xl p-8">
+        <PageTitle label="Staff Dashboard" /> {/* Assuming you want to use PageTitle here */}
+        <div className="w-full flex flex-col gap-6 mt-6">
+          {renderMenu}
+        </div>
       </div>
 
       {/* Right Content Area */}
@@ -75,4 +77,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default StaffDashboard;

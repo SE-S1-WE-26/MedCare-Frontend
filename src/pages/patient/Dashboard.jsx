@@ -61,9 +61,11 @@ const Dashboard = () => {
   return (
     <div className="flex flex-col md:flex-row h-full w-full gap-6">
       {/* Left Menu */}
+      <div className="w-full md:w-1/2 rounded-3xl p-8">
       <PageTitle label="Patient Dashboard" />
-      <div className="w-full md:w-1/2 flex flex-col gap-6 -mt-6">
+      <div className="w-full flex flex-col gap-6 mt-6">
         {renderMenu}
+      </div>
       </div>
 
       {/* Right Content Area */}

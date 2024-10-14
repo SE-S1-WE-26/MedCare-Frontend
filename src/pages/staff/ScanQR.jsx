@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Card, CardHeader, CardBody, Typography, CardFooter, Spinner } from "@material-tailwind/react";
+import { Card, CardHeader, CardBody, Typography, CardFooter, Spinner, Button } from "@material-tailwind/react"; // Import Button
 import BackNavigation from "../../components/pagecomponents/BackNavigation";
 import { QrReader } from "react-qr-reader"; // Using QR reader library
+import { useNavigate } from "react-router-dom";
 
 const ScanQR = () => {
   const [loading, setLoading] = useState(true); // State to manage loading indicator
@@ -18,6 +19,14 @@ const ScanQR = () => {
   const handleError = (err) => {
     console.error("QR scan error:", err); // Handle errors if needed
     setLoading(false); // Disable loading on error
+  };
+
+  const navigate = useNavigate();
+  const handleNext = () => {
+    // Add your logic for the next action here
+    console.log("Proceeding to the next step with data:", scannedData);
+    navigate("/staff/patient-info"); // Navigate to the next page
+
   };
 
   return (
@@ -66,6 +75,14 @@ const ScanQR = () => {
                   Scanning in progress...
                 </Typography>
               )}
+              {/* Next button to proceed after scanning */}
+              <Button 
+                  color="dark-blue" 
+                  onClick={handleNext} 
+                  className="mt-4"
+                >
+                  Next
+                </Button>
             </Card>
           </CardFooter>
         </Card>
