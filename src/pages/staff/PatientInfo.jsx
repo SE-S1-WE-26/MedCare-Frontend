@@ -36,9 +36,9 @@ const checkupHistory = [
 const renderTableRows = (data) =>
   data.map((row, index) => (
     <tr key={index} className="border-b border-blue-gray-100">
-      <td className="p-4">{row.date}</td>
-      <td className="p-4">{row.condition || row.checkup}</td>
-      <td className="p-4">{row.followUp || row.status}</td>
+      <td className="p-4 text-sm">{row.date}</td>
+      <td className="p-4 text-sm">{row.condition || row.checkup}</td>
+      <td className="p-4 text-sm">{row.followUp || row.status}</td>
     </tr>
   ));
 
@@ -48,7 +48,7 @@ const PatientInfo = () => {
       <BackNavigation label="Patient Information" />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Left Column: Profile, Bio Data, Demographics */}
-        <Card className="bg-white p-6 py-12">
+        <Card className="bg-white p-4 md:p-6 py-12">
           <CardHeader className="py-4 px-6">
             <div className="flex items-center space-x-4">
               <img
@@ -56,13 +56,13 @@ const PatientInfo = () => {
                 alt="Profile"
                 className="w-16 h-16 rounded-full"
               />
-              <Typography variant="h6">{patientDetails.name}</Typography>
+              <Typography variant="h6" className="text-lg md:text-xl">{patientDetails.name}</Typography>
             </div>
           </CardHeader>
           <CardBody>
             <Card className="py-4 px-6 mt-8">
               <CardHeader className="py-4 px-6">
-                <Typography variant="h6" className="text-xl text-center">
+                <Typography variant="h6" className="text-lg md:text-xl text-center">
                   Bio Data
                 </Typography>
               </CardHeader>
@@ -70,8 +70,8 @@ const PatientInfo = () => {
                 <div className="flex flex-col space-y-2">
                   {patientDetails.bioData.map((item, index) => (
                     <div key={index} className="flex justify-between">
-                      <Typography>{item.label}</Typography>
-                      <Typography>{item.value}</Typography>
+                      <Typography className="text-sm md:text-base">{item.label}</Typography>
+                      <Typography className="text-sm md:text-base">{item.value}</Typography>
                     </div>
                   ))}
                 </div>
@@ -80,7 +80,7 @@ const PatientInfo = () => {
 
             <Card className="py-4 px-6 mt-10 ">
               <CardHeader className="py-4 px-6">
-                <Typography variant="h6" className="text-xl text-center">
+                <Typography variant="h6" className="text-lg md:text-xl text-center">
                   Demographic Information
                 </Typography>
               </CardHeader>
@@ -88,8 +88,8 @@ const PatientInfo = () => {
                 <div className="flex flex-col space-y-2">
                   {patientDetails.demographics.map((item, index) => (
                     <div key={index} className="flex justify-between">
-                      <Typography>{item.label}</Typography>
-                      <Typography>{item.value}</Typography>
+                      <Typography className="text-sm md:text-base">{item.label}</Typography>
+                      <Typography className="text-sm md:text-base">{item.value}</Typography>
                     </div>
                   ))}
                 </div>
@@ -100,14 +100,14 @@ const PatientInfo = () => {
 
         {/* Right Column: Appointment and Checkup History */}
         <div className="space-y-6">
-          <Card className="bg-white p-6 py-12">
+          <Card className="bg-white p-4 md:p-6 py-12">
             <CardHeader className="py-4 px-6">
-              <Typography variant="h6" className="text-xl">
+              <Typography variant="h6" className="text-lg md:text-xl">
                 Appointment History
               </Typography>
             </CardHeader>
             <CardBody>
-              <table className="w-full table-auto">
+              <table className="w-full table-auto text-sm">
                 <thead>
                   <tr>
                     <th className="p-4">Date</th>
@@ -120,14 +120,14 @@ const PatientInfo = () => {
             </CardBody>
           </Card>
 
-          <Card className="bg-white p-6 py-12">
+          <Card className="bg-white p-4 md:p-6 py-12">
             <CardHeader className="py-4 px-6">
-              <Typography variant="h6" className="text-xl">
+              <Typography variant="h6" className="text-lg md:text-xl">
                 Checkup History
               </Typography>
             </CardHeader>
             <CardBody>
-              <table className="w-full table-auto">
+              <table className="w-full table-auto text-sm">
                 <thead>
                   <tr>
                     <th className="p-4">Date</th>
