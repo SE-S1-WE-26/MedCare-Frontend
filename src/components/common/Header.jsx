@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import images from '../../constants/images';
 import icons from '../../constants/icons';
-import { Typography } from '@material-tailwind/react';
+import { Typography, Button } from '@material-tailwind/react';
 import PatientHeader from './PatientHeader';
 import StaffHeader from './StaffHeader';
 import { HiOutlineX } from "react-icons/hi"; // Import the icon
@@ -55,14 +55,14 @@ const Header = ({ userRole, setUserRole }) => {
             <div className='flex flex-col w-full'>
               {userRole === "patient" && <PatientHeader patientId={parentId} />}
               {userRole === "staff" && <StaffHeader />}
-              <button className='mt-2 p-2 bg-red-500 text-white rounded' onClick={handleLogout}>
-                Logout
-              </button>
+              <Button style={{ textTransform: "none" }} className='mt-2 p-2 bg-red-500 text-white rounded' onClick={handleLogout}>
+               <Typography className='text-sm font-poppins font-medium'>Logout</Typography>
+              </Button>
             </div>
           ) : (
-            <button className='p-2 bg-blue-500 text-white rounded' onClick={handleLogin}>
-              Login
-            </button>
+            <Button style={{ textTransform: "none" }} className='p-2 bg-blue-500 text-white rounded' onClick={handleLogin}>
+            <Typography className='text-sm font-poppins font-medium'>Login</Typography>
+            </Button>
           )}
         </div>
       )}
@@ -73,14 +73,14 @@ const Header = ({ userRole, setUserRole }) => {
           <>
             {userRole === "patient" && <PatientHeader patientId={parentId}/>}
             {userRole === "staff" && <StaffHeader />}
-            <button className='p-2 bg-red-500 text-white rounded-lg lg:mr-6' onClick={handleLogout}>
-              Logout
-            </button>
+            <Button style={{ textTransform: "none" }} className='p-2 bg-red-500 px-8 text-white rounded-lg lg:mr-6' onClick={handleLogout}>
+            <Typography className='text-lg font-poppins font-medium'>Logout</Typography>
+            </Button>
           </>
         ) : (
-          <button className='p-2 bg-blue-500 text-white rounded-lg lg:mr-6' onClick={handleLogin}>
-            Login
-          </button>
+          <Button style={{ textTransform: "none" }} className='p-2 px-8 bg-blue-500 text-white rounded-lg lg:mr-6' onClick={handleLogin}>
+          <Typography className='text-lg font-poppins font-medium'>Login</Typography>
+          </Button>
         )}
       </div>
     </div>
