@@ -22,6 +22,9 @@ import PaymentForm from '../../pages/patient/PaymentForm';
 
 import StaffPatients from '../../pages/staff/Patients';
 import StaffStaff from '../../pages/staff/Staff';
+import StaffMedicalRecords from '../../pages/staff/MedicalRecords';
+import StaffAppointments from '../../pages/staff/Appointments';
+import StaffCheckups from '../../pages/staff/Checkups';
 
 const AppRoutes = ({ setUserRole }) => {
   return (
@@ -38,9 +41,17 @@ const AppRoutes = ({ setUserRole }) => {
       <Route path="/patient/medical-records" element={<MedicalRecords />} />
       <Route path="/patient/lab-reports" element={<LabReports />} />
       <Route path="/patient/medical-profile" element={<MedicalProfile />} />
+      <Route path="/patient/demographic-form" element={<DemographicForm />} />
+      <Route path="/patient/biographic-form" element={<BiographicForm />} />
+      <Route path="/patient/appointments/create-appointment" element={<CreateAppointment />} />
+      <Route path="/patient/appointments/appointment-form" element={<AppointmentForm />} />
+      <Route path="/patient/payment-form" element={<PaymentForm />} />
 
       <Route path="/staff/patients" element={<StaffPatients />} />
       <Route path="/staff/staff" element={<StaffStaff />} />
+      <Route path="/staff/medical-records" element={<StaffMedicalRecords />} />
+      <Route path="/staff/appointments" element={<StaffAppointments />} />
+      <Route path="/staff/checkups" element={<StaffCheckups />} />
     </Routes>
   );
 };

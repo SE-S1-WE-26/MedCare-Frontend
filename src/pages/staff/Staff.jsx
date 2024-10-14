@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Staff() {
+const Staff = () => {
   return (
     <div>Staff</div>
   )
