@@ -10,6 +10,7 @@ import applepay from '../assets/icons/patient/applepay.png';
 import visa from '../assets/icons/patient/visa.png';
 import master from '../assets/icons/patient/mastercard.png';
 import insurance from '../assets/icons/patient/insurance.png';
+import profilepic from '../assets/icons/patient/profilePic.png';
 
 export default {
     medical,
@@ -22,5 +23,6 @@ export default {
     applepay,
     visa,
     master,
-    insurance
+    insurance,
+    profilepic
 };

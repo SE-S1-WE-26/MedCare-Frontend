@@ -24,7 +24,7 @@ const PatientHeader = () => {
       className="cursor-pointer w-full"
     >
       <button
-        className={`w-full px-4 py-2 border-2 rounded-lg border-light-blue bg-dark-blue ${
+        className={`w-full px-4 py-2 border rounded-lg border-light-blue bg-dark-blue ${
           selected === section.link ? "bg-light-blue" : ""
         }`}
       >
@@ -42,11 +42,17 @@ const PatientHeader = () => {
   return (
     <div className="flex flex-col md:flex-row gap-2 w-full">
       {renderMenu}
-      <div className="flex flex-col md:flex-row gap-2 w-full"> {/* Changed to flex-col for mobile view */}
-        <button className="flex-1 p-2 bg-light-blue rounded-lg"> {/* Ensure full width for both buttons */}
+      <div className="flex flex-row gap-2 w-full justify-between"> {/* Changed to flex-col for mobile view */}
+        <button className="flex-1 p-2 bg-light-blue rounded-lg w-10 flex items-center justify-center"> 
           <img src={icons.qr} alt="QR" className="w-6 h-6" />
         </button>
-        <button className="flex-1 border-2 rounded-full">Profile</button>
+        <button className="flex-1 border-2 rounded-full w-14">
+        <img
+            src={icons.profilepic}
+            alt="Profile"
+            className="object-cover w-full h-full rounded-full" // Use w-full and h-full for proper coverage
+          />
+        </button>
       </div>
     </div>
   );

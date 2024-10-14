@@ -5,14 +5,12 @@ import DoctorCard from "../../components/pagecomponents/patient/DoctorCard";
 import { useLocation, useNavigate } from "react-router-dom";
 import images from "../../constants/images";
 
-
 const AppointmentForm = () => {
-    
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleNavigate = () => {
     navigate("/patient/payment-form");
-  }
+  };
 
   const location = useLocation();
   const { doctor } = location.state || {}; // Access the passed doctor object
@@ -25,17 +23,17 @@ const AppointmentForm = () => {
     <div className="w-full lg:mb-6 md:mb-8">
       <BackNavigation label="Make an Appointment" />
       <div className="flex flex-col md:flex-row gap-4">
-        <div className="px-2 w-full md:w-1/2">
+        <div className="px-2 w-full md:w-1/2 flex flex-col">
           <DoctorCard doctor={doctor} />
           {/* Hide this image on mobile view */}
           <img 
             src={images.poster1} 
             alt="Doctor" 
-            className="hidden md:block w-full mt-4 pl-14 pt-14 pr-24 pb-14" 
+            className="hidden md:block w-full mt-4 pl-14 pr-24 " 
           />
         </div>
-        <Card className="p-4 md:p-8 rounded-3xl w-full md:w-1/2 ">
-          <form>
+        <Card className="p-4 md:p-8 rounded-3xl w-full md:w-1/2 flex flex-col justify-between">
+          <form className="lg:mt-12 items-center">
             <div className="flex flex-col gap-4">
               {/* Appointment Date and Time */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
