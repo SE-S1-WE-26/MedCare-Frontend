@@ -29,6 +29,7 @@ import StaffAppointments from '../../pages/staff/Appointments';
 import StaffCheckups from '../../pages/staff/Checkups';
 import CreateMedicalRecord from '../../pages/staff/CreateMedicalRecord';
 import CreateStaff from '../../pages/staff/CreateStaff';
+import PatientInfo from '../../pages/staff/PatientInfo';
 
 
 const AppRoutes = ({ setUserRole }) => {
@@ -61,6 +62,7 @@ const AppRoutes = ({ setUserRole }) => {
       <Route path="/staff/patients" element={<StaffPatients />} />
       <Route path="/staff/staff" element={<StaffStaff />} />
       <Route path="/staff/staff-form" element={<CreateStaff />} />
+      <Route path="/staff/patient-info" element={<PatientInfo />} />
     </Routes>
   );
 };
