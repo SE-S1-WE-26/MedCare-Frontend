@@ -17,8 +17,8 @@ const StaffHeader = () => {
 
   const sections = [
     { title: "Home", link: "/staff" },
-    { title: "Appointments", link: "/staff/patients" },
-    { title: "Services", link: "/staff/staff" },
+    { title: "Patients", link: "/staff/patients" },
+    { title: "Staff", link: "/staff/staff" },
   ];
 
   const renderMenu = sections.map((section, index) => (

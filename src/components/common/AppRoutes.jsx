@@ -25,14 +25,13 @@ import ScanQR from '../../pages/staff/ScanQR';
 import StaffForm from '../pagecomponents/staff/StaffForm';
 import StaffPatients from '../../pages/staff/Patients';
 import StaffStaff from '../../pages/staff/Staff';
-<<<<<<< Updated upstream
-=======
+
 import StaffMedicalRecords from '../../pages/staff/MedicalRecords';
 import StaffAppointments from '../../pages/staff/Appointments';
 import StaffCheckups from '../../pages/staff/Checkups';
 import CreateMedicalRecord from '../../pages/staff/CreateMedicalRecord';
 import CreateStaff from '../../pages/staff/CreateStaff';
->>>>>>> Stashed changes
+
 
 const AppRoutes = ({ setUserRole }) => {
   return (
@@ -50,18 +49,15 @@ const AppRoutes = ({ setUserRole }) => {
       <Route path="/patient/medical-records" element={<MedicalRecords />} />
       <Route path="/patient/lab-reports" element={<LabReports />} />
       <Route path="/patient/medical-profile" element={<MedicalProfile />} />
+      <Route path="/patient/demographic-form" element={<DemographicForm />} />
+      <Route path="/patient/biographic-form" element={<BiographicForm />} />
+      <Route path="/patient/appointments/create-appointment" element={<CreateAppointment />} />
+      <Route path="/patient/appointments/appointment-form" element={<AppointmentForm />} />
+      <Route path="/patient/payment-form" element={<PaymentForm />} />
 
       <Route path="/staff/scan-qr" element={<ScanQR />} />
       <Route path="/staff/patients" element={<StaffPatients />} />
       <Route path="/staff/staff" element={<StaffStaff />} />
-<<<<<<< Updated upstream
-=======
-      <Route path="/staff/medical-records" element={<StaffMedicalRecords />} />
-      <Route path="/staff/appointments" element={<StaffAppointments />} />
-      <Route path="/staff/checkups" element={<StaffCheckups />} />
-      <Route path="/staff/medical-records/create" element={<CreateMedicalRecord />} />
-      <Route path="/staff/staff-form" element={<CreateStaff />} />
->>>>>>> Stashed changes
     </Routes>
   );
 };
