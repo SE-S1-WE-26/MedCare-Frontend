@@ -7,7 +7,7 @@ import { StaffMedicalRecordsTable } from '../../components/pagecomponents/staff/
 const MedicalRecords = () => {
   return (
     <div className='w-full'>
-      <BackNavigation label="Medical Records" btn={true} btnTitle={"Add a Record"} btnStyle={'bg-green'}/>
+      <BackNavigation label="Medical Records" btn={true} btnTitle={"Add a Record"} btnStyle={'bg-green'} link={'/staff/medical-records/create'}/>
       <StaffMedicalRecordsTable />
     </div>
   )

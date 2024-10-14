@@ -88,7 +88,7 @@ const Staff = () => {
 
   return (
     <div className="w-full">
-      <PageTitle label="Staff" btn={true} btnTitle={'Add Staff'} btnStyle={'bg-green'}/>
+      <PageTitle label="Staff" btn={true} btnTitle={'Add Staff'} btnStyle={'bg-green'} link={'/staff/staff-form'}/>
       <SearchBar 
         placeholder="Search for a doctor..." 
         onChange={handleSearchChange}
