@@ -1,8 +1,13 @@
 import React from 'react'
+import BackNavigation from '../../components/pagecomponents/BackNavigation'
+import {StaffAppointmentsTable} from '../../components/pagecomponents/staff/AppointmentsTable'
 
 const Appointments = () => {
   return (
-    <div>Appointments</div>
+    <div className='w-full'>
+      <BackNavigation label="Appointments" />
+      <StaffAppointmentsTable />
+    </div>
   )
 }
 
