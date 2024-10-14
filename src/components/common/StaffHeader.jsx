@@ -11,6 +11,10 @@ const StaffHeader = () => {
     navigate(link);
   };
 
+  const handleScanQR = () => {
+    navigate('/staff/scan-qr');
+  }
+
   const sections = [
     { title: "Home", link: "/staff" },
     { title: "Patients", link: "/staff/patients" },
@@ -31,7 +35,7 @@ const StaffHeader = () => {
     <div className='flex flex-col md:flex-row gap-2 w-full'>
       {renderMenu}
       <div className="flex flex-row gap-2 w-full justify-between"> {/* Changed to flex-col for mobile view */}
-        <button className="flex-1 p-2 bg-light-blue rounded-lg w-20 justify-center"> {/* Ensure full width for both buttons */}
+        <button className="flex-1 p-2 bg-light-blue rounded-lg w-20 justify-center" onClick={handleScanQR}> {/* Ensure full width for both buttons */}
           <Typography className='font-poppins text-xs'>Scan QR</Typography>
         </button>
         <button className="flex-1 border-2 rounded-full">Profile</button>

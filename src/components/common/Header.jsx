@@ -9,6 +9,7 @@ import { HiOutlineX } from "react-icons/hi"; // Import the icon
 import { HiMenu } from "react-icons/hi";
 
 const Header = ({ userRole, setUserRole }) => {
+  const parentId = 1;
   const navigate = useNavigate();
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false); // State for mobile menu
 
@@ -52,7 +53,7 @@ const Header = ({ userRole, setUserRole }) => {
         <div className="absolute top-16 right-0 bg-dark-blue shadow-lg rounded-lg p-4 z-10 md:hidden">
           {userRole ? (
             <div className='flex flex-col w-full'>
-              {userRole === "patient" && <PatientHeader />}
+              {userRole === "patient" && <PatientHeader patientId={parentId} />}
               {userRole === "staff" && <StaffHeader />}
               <button className='mt-2 p-2 bg-red-500 text-white rounded' onClick={handleLogout}>
                 Logout
@@ -70,7 +71,7 @@ const Header = ({ userRole, setUserRole }) => {
       <div className="hidden md:flex md:flex-row md:items-center md:gap-4 py-4 items-center">
         {userRole ? (
           <>
-            {userRole === "patient" && <PatientHeader />}
+            {userRole === "patient" && <PatientHeader patientId={parentId}/>}
             {userRole === "staff" && <StaffHeader />}
             <button className='p-2 bg-red-500 text-white rounded-lg lg:mr-6' onClick={handleLogout}>
               Logout

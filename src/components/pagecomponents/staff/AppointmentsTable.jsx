@@ -1,3 +1,5 @@
+// frontend/src/components/pagecomponents/staff/AppointmentsTable.jsx
+
 import React, { useState } from "react";
 import { Card, Typography, Button, Accordion, AccordionBody } from "@material-tailwind/react";
 import { HiOutlineInformationCircle } from "react-icons/hi";

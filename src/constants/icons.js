@@ -11,6 +11,7 @@ import visa from '../assets/icons/patient/visa.png';
 import master from '../assets/icons/patient/mastercard.png';
 import insurance from '../assets/icons/patient/insurance.png';
 import profilepic from '../assets/icons/patient/profilePic.png';
+import emergency from '../assets/icons/patient/emergency.png';
 
 import appointment from '../assets/icons/staff/appointment.png';
 import checkups from '../assets/icons/staff/checkups.png';
@@ -30,4 +31,5 @@ export default {
     profilepic,
     appointment,
     checkups,
+    emergency
 };

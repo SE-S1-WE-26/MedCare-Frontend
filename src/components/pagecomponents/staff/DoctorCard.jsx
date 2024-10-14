@@ -1,3 +1,5 @@
+// frontend/src/components/pagecomponents/staff/DoctorCard.jsx
+
 import React from 'react';
 import { Card, Typography, Button } from '@material-tailwind/react';
 import icons from '../../../constants/images';
