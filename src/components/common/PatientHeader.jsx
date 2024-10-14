@@ -2,13 +2,18 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import icons from "../../constants/icons";
 
-const PatientHeader = () => {
+const PatientHeader = ({ patientId }) => {
   const [selected, setSelected] = useState("/");
   const navigate = useNavigate();
 
   const handleMenuClick = (link) => {
     setSelected(link);
     navigate(link);
+  };
+
+  const handleQR = () => {
+    // Navigate to MyQR page with patientId as a URL parameter
+    navigate(`/patient/my-qr/${patientId}`);
   };
 
   const sections = [
@@ -42,15 +47,18 @@ const PatientHeader = () => {
   return (
     <div className="flex flex-col md:flex-row gap-2 w-full">
       {renderMenu}
-      <div className="flex flex-row gap-2 w-full justify-between"> {/* Changed to flex-col for mobile view */}
-        <button className="flex-1 p-2 bg-light-blue rounded-lg w-10 flex items-center justify-center"> 
+      <div className="flex flex-row gap-2 w-full justify-between">
+        <button 
+          className="flex-1 p-2 bg-light-blue rounded-lg w-10 flex items-center justify-center" 
+          onClick={handleQR}
+        > 
           <img src={icons.qr} alt="QR" className="w-6 h-6" />
         </button>
         <button className="flex-1 border-2 rounded-full w-14">
-        <img
+          <img
             src={icons.profilepic}
             alt="Profile"
-            className="object-cover w-full h-full rounded-full" // Use w-full and h-full for proper coverage
+            className="object-cover w-full h-full rounded-full"
           />
         </button>
       </div>
