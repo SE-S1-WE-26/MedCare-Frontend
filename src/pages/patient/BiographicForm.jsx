@@ -56,7 +56,7 @@ const BiographicForm = () => {
 
       const data = await response.json();
       setSuccess("Biographic data submitted successfully!");
-      navigate("/patient");
+      navigate("/patient/medical-profile");
     } catch (error) {
       setError(error.message || "Failed to submit the form. Please try again.");
       console.error("Error submitting form:", error);

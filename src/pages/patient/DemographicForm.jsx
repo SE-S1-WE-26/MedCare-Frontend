@@ -52,7 +52,7 @@ const DemographicForm = () => {
       console.log("Response from backend:", data);
 
       // Redirect to home after successful submission
-      navigate("/patient"); // Change this to your home route
+      navigate("/patient/medical-profile"); // Change this to your home route
     } catch (error) {
       setError("Failed to submit the form. Please try again."); // Show error message
       console.error("Error:", error);

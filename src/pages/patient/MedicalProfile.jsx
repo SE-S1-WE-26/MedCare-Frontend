@@ -13,40 +13,55 @@ const specialConditions = [
 const MedicalProfile = () => {
   const [isBioOpen, setIsBioOpen] = useState(false);
   const [isDemoOpen, setIsDemoOpen] = useState(false);
-  const [patientDetails, setPatientDetails] = useState(null);
-  const [bioData, setBioData] = useState(null);  // Store fetched bio data
+  const [patientDetails, setPatientDetails] = useState([]);
+  const [bioData, setBioData] = useState([]); // Store fetched bio data
 
   const navigate = useNavigate();
 
   const Host_Ip = "http://localhost:8010";
 
   // Fetch demographic data and bio data by user ID
+  const fetchPatientDetails = async () => {
+    try {
+      const userId = "59b99db4cfa9a34dcd7885b6"; // Replace with actual user ID
+
+      // Fetch Demographic Data
+      // const demographicResponse = await axios.get(`${Host_Ip}/patient/demographic/user/${userId}`);
+      const demographicResponse = await axios.get(
+        `${Host_Ip}/patient/demographic/all`
+      );
+
+      // Fetch Bio Data
+      // const bioDataResponse = await axios.get(`${Host_Ip}/patient/biodata/user/${userId}`);
+      const bioDataResponse = await axios.get(
+        `${Host_Ip}/patient/biodata/all`
+      );
+
+      console.log(bioDataResponse.data);
+      const lenDemo = demographicResponse.data.length;
+      setPatientDetails(demographicResponse.data[lenDemo - 1]);
+
+      const len = bioDataResponse.data.length;
+      setBioData(bioDataResponse.data[len - 1]); // Set the fetched bio data
+    } catch (error) {
+      console.error("Error fetching patient details:", error);
+    }
+  };
+
+
   useEffect(() => {
-    const fetchPatientDetails = async () => {
-      try {
-        const userId = "59b99db4cfa9a34dcd7885b6"; // Replace with actual user ID
+    if (patientDetails.length == 0 || !bioData.length == 0) {
 
-        // Fetch Demographic Data
-        const demographicResponse = await axios.get(`${Host_Ip}/patient/demographic/user/${userId}`);
-        
-        // Fetch Bio Data
-        const bioDataResponse = await axios.get(`${Host_Ip}/patient/biodata/user/${userId}`);
-
-        setPatientDetails(demographicResponse.data);
-        setBioData(bioDataResponse.data[0]); // Set the fetched bio data
-      } catch (error) {
-        console.error("Error fetching patient details:", error);
-      }
-    };
-    fetchPatientDetails();
+      fetchPatientDetails();
+    }
   }, []);
 
   const handleDemographic = () => {
-    navigate('/patient/demographic-form');
+    navigate("/patient/demographic-form");
   };
-  
+
   const handleBiographic = () => {
-    navigate('/patient/biographic-form');
+    navigate("/patient/biographic-form");
   };
 
   if (!patientDetails || !bioData) {
@@ -71,31 +86,45 @@ const MedicalProfile = () => {
           </div>
 
           {/* Bio Data Section */}
-          <div className="flex justify-between pr-2 cursor-pointer lg:cursor-default" onClick={() => setIsBioOpen(!isBioOpen)}>
+          <div
+            className="flex justify-between pr-2 cursor-pointer lg:cursor-default"
+            onClick={() => setIsBioOpen(!isBioOpen)}
+          >
             <p className="font-medium">Bio Data</p>
             <TfiAlignJustify />
           </div>
-          <div className={`flex lg:flex-row justify-between ${isBioOpen ? "block" : "hidden"} lg:flex`}>
+          <div
+            className={`flex lg:flex-row justify-between ${
+              isBioOpen ? "block" : "hidden"
+            } lg:flex`}
+          >
             <div className="space-y-1 text-sm lg:text-base">
               <p>Blood Group</p>
               <p>Weight</p>
               <p>Height</p>
-              <p>Allergies</p>
+              <p>BMI</p>
             </div>
             <div className="space-y-1 text-sm lg:text-base">
               <p>: {bioData.bloodGroup}</p>
-              <p>: {bioData.weight}</p>
-              <p>: {bioData.height}</p>
-              <p>: {bioData.allergies}</p>
+              <p>: {bioData.weight} kg</p>
+              <p>: {bioData.height} cm</p>
+              <p>: {bioData.bmi}</p>
             </div>
           </div>
 
           {/* Demographic Data Section */}
-          <div className="flex justify-between pt-2 pr-2 cursor-pointer lg:cursor-default" onClick={() => setIsDemoOpen(!isDemoOpen)}>
+          <div
+            className="flex justify-between pt-2 pr-2 cursor-pointer lg:cursor-default"
+            onClick={() => setIsDemoOpen(!isDemoOpen)}
+          >
             <p className="font-medium">Demographic Data</p>
             <TfiAlignJustify />
           </div>
-          <div className={`flex justify-between ${isDemoOpen ? "block" : "hidden"} lg:flex`}>
+          <div
+            className={`flex justify-between ${
+              isDemoOpen ? "block" : "hidden"
+            } lg:flex`}
+          >
             <div className="space-y-1 text-sm lg:text-base">
               <p>Name</p>
               <p>Birthday</p>
@@ -105,9 +134,11 @@ const MedicalProfile = () => {
               <p>Emergency Contact Number</p>
             </div>
             <div className="space-y-1 text-sm lg:text-base">
-              <p>: {`${patientDetails.firstName} ${patientDetails.lastName}`}</p>
+              <p>
+                : {`${patientDetails.firstName} ${patientDetails.lastName}`}
+              </p>
               <p>: {new Date(patientDetails.birthday).toLocaleDateString()}</p>
-              <p>: {patientDetails.gender}</p>
+              <p>: {patientDetails.gender === "M" ? "Male" : "Female"}</p>
               <p>: {patientDetails.address}</p>
               <p>: {patientDetails.mobileNumber}</p>
               <p>: {patientDetails.emergencyContactNumber}</p>
@@ -135,10 +166,16 @@ const MedicalProfile = () => {
           </div>
         ))}
         <div className="flex gap-5">
-          <button className="w-full bg-blue-500 text-white rounded-lg p-2 lg:p-4 font-semibold" onClick={handleDemographic}>
+          <button
+            className="w-full bg-blue-500 text-white rounded-lg p-2 lg:p-4 font-semibold"
+            onClick={handleDemographic}
+          >
             Add Demographic Data
           </button>
-          <button className="w-full bg-blue-500 text-white rounded-lg p-2 lg:p-4 font-semibold" onClick={handleBiographic}>
+          <button
+            className="w-full bg-blue-500 text-white rounded-lg p-2 lg:p-4 font-semibold"
+            onClick={handleBiographic}
+          >
             Add Biographic Data
           </button>
         </div>
