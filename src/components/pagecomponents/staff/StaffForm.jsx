@@ -15,6 +15,8 @@ const StaffForm = () => {
   const [profilePicPreview, setProfilePicPreview] = useState("");
 
   const handleProfilePicChange = (e) => {
+
+    
     const file = e.target.files[0];
     if (file) {
       setProfilePic(file);
@@ -25,26 +27,34 @@ const StaffForm = () => {
       reader.readAsDataURL(file);
     }
   };
+  const Host_Ip = process.env.Host_Ip || "http://localhost:8010";
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Create a new staff member object
+  
     const newStaffMember = {
       name,
       specialty,
       hospital,
       rating,
       reviews,
-      profilePic,
+      profilePic: profilePicPreview, // send image preview URL or save it in backend
     };
-
-    // Log the new staff member to the console (or handle it as needed)
-    console.log(newStaffMember);
-    
-    // Optionally navigate away or reset the form
-    navigate("/staff/staff"); // Change to the desired path
+  
+    try {
+      const response = await fetch( `${Host_Ip}/patient/doctors/add`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newStaffMember),
+      });
+      if (response.ok) {
+        navigate("/staff/staff"); // Adjust as needed
+      }
+    } catch (error) {
+      console.error("Error saving staff data:", error);
+    }
   };
+  
 
   return (
     <Card className="p-8 rounded-3xl max-w-md mx-auto"> {/* Set max width and center */}
