@@ -1,10 +1,11 @@
 import { React, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import icons from "../../constants/icons";
-import { Card } from "@material-tailwind/react";
-import PageTitle from "../../components/pagecomponents/PageTitle"; // Assuming you're using PageTitle here too
+import images from "../../constants/images"; 
+import { Card, Typography } from "@material-tailwind/react";
+import PageTitle from "../../components/pagecomponents/PageTitle"; // Assuming you're using PageTitle here
 
-const Dashboard = () => {
+const StaffDashboard = () => {
   const [selected, setSelected] = useState("/");
   const navigate = useNavigate();
 
@@ -61,18 +62,24 @@ const Dashboard = () => {
   return (
     <div className="flex flex-col md:flex-row h-full w-full gap-6">
       {/* Left Menu */}
-      <PageTitle label="Staff Dashboard" /> {/* Assuming you want to use PageTitle here */}
-      <div className="w-full md:w-1/2 flex flex-col gap-6 -mt-6">
-        {renderMenu}
+      <div className="w-full md:w-1/2 rounded-3xl p-8">
+        <PageTitle label="Staff Dashboard" /> {/* Assuming you want to use PageTitle here */}
+        <div className="w-full flex flex-col gap-6 mt-6">
+          {renderMenu}
+        </div>
       </div>
 
       {/* Right Content Area */}
-      <Card className="w-full md:w-1/2 bg-white rounded-3xl p-8">
+      <Card className="hidden md:flex w-full md:w-1/2 bg-white rounded-3xl p-8 items-center">
         {/* This is the right-side content area */}
-        {/* You can add content or components here as needed */}
+        <div className="absolute left-12 top-12">
+          <Typography color="gray" className="text-4xl font-medium font-poppins flex flex-row"><p className="text-blue-500 text-5xl">Caring</p><p className="ml-3">for patients,</p></Typography>
+          <Typography color="gray" className="text-4xl font-medium font-poppins mt-2 flex flex-row">changing <p className="text-blue-500 ml-4 text-5xl font-bold">lives.</p></Typography>
+        </div>
+        <img src={images.art5} alt="Staff Dashboard" className="w-full my-auto" />
       </Card>
     </div>
   );
 };
 
-export default Dashboard;
+export default StaffDashboard;

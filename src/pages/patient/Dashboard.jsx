@@ -1,7 +1,8 @@
 import { React, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import icons from "../../constants/icons";
-import { Card } from '@material-tailwind/react';
+import images from "../../constants/images"; 
+import { Card,Typography } from '@material-tailwind/react';
 import PageTitle from "../../components/pagecomponents/PageTitle";
 
 const Dashboard = () => {
@@ -61,15 +62,21 @@ const Dashboard = () => {
   return (
     <div className="flex flex-col md:flex-row h-full w-full gap-6">
       {/* Left Menu */}
+      <div className="w-full md:w-1/2 rounded-3xl p-8">
       <PageTitle label="Patient Dashboard" />
-      <div className="w-full md:w-1/2 flex flex-col gap-6 -mt-6">
+      <div className="w-full flex flex-col gap-6 mt-6">
         {renderMenu}
+      </div>
       </div>
 
       {/* Right Content Area */}
-      <Card className="w-full md:w-1/2 bg-white rounded-3xl p-8">
+      <Card className="hidden md:flex w-full md:w-1/2 bg-white rounded-3xl p-8">
         {/* This is the right-side content area */}
-        {/* You can add content or components here as needed */}
+        <div className="absolute left-12 top-12">
+          <Typography color="gray" className="text-4xl font-medium font-poppins flex flex-row">Your <p className="text-blue-500 ml-3">Health,</p></Typography>
+          <Typography color="gray" className="text-5xl font-medium font-poppins mt-2 flex flex-row">Your <p className="text-blue-500 ml-4 font-bold text-5xl">Wealth.</p></Typography>
+        </div>
+        <img src={images.art4} alt="Staff Dashboard" className="w-full my-auto" />
       </Card>
     </div>
   );
