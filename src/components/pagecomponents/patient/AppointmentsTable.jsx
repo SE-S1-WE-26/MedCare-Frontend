@@ -35,6 +35,7 @@ const AppointmentsTable = () => {
       );
 
       setAppointment(appointmentResponse.data);
+      console.log(appointment);
     } catch (error) {
       console.error("Error fetching appointment details:", error);
     }
@@ -87,12 +88,12 @@ const AppointmentsTable = () => {
               ))}
             </tr>
           </thead>
-          <tbody>
+          <tbody> console.log(appointment);
             {appointment.map(
               (
                 {
                   _id,
-                  appointmentPic,
+                  doctorPic,
                   doctorName,
                   doctorType,
                   date,
@@ -100,6 +101,7 @@ const AppointmentsTable = () => {
                   problem,
                   notes,
                   additionalInfo,
+                  file
                 },
                 index
               ) => {
@@ -113,7 +115,7 @@ const AppointmentsTable = () => {
                       <td className={classes}>
                         <div className="flex items-center">
                           <img
-                            src={icons.doctor}
+                            src={doctorPic}
                             alt={doctorName}
                             className="w-12 h-12 rounded-xl bg-light-blue mr-4"
                           />
@@ -225,7 +227,7 @@ const AppointmentsTable = () => {
         {appointment.map(
           (
             {
-              appointmentPic,
+              doctorPic,
               doctorName,
               doctorType,
               date,
@@ -248,7 +250,7 @@ const AppointmentsTable = () => {
                   {/* Appointment Profile Picture */}
                   <div className="flex-shrink-0 w-20 h-20">
                     <img
-                      src={appointmentPic}
+                      src={doctorPic}
                       alt={doctorName}
                       className="h-full w-full rounded-xl bg-light-blue object-cover"
                     />

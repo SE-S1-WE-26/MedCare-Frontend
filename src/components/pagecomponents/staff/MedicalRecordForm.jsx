@@ -1,12 +1,20 @@
 import React, { useState } from "react";
-import { Card, Typography, Button, Input, Textarea, Select } from "@material-tailwind/react";
+import {
+  Card,
+  Typography,
+  Button,
+  Input,
+  Textarea,
+  Select,
+} from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios"; // Add axios for API requests
 
-// Sample patient data for the dropdown (you might fetch this from an API or use your existing data)
+// Sample patient data for the dropdown
 const PATIENTS = [
-  { id: 1, name: "John Doe" },
-  { id: 2, name: "Jane Smith" },
-  { id: 3, name: "Alice Johnson" },
+  { id: "59b99db4cfa9a34dcd7885b6", name: "John Doe" },
+  { id: "59b99db4cfa9a34dcd7885b7", name: "Jane Smith" },
+  { id: "59b99db4cfa9a34dcd7885b8", name: "Alice Johnson" },
 ];
 
 const MedicalRecordForm = () => {
@@ -19,27 +27,43 @@ const MedicalRecordForm = () => {
   const [notes, setNotes] = useState("");
   const [followUpDate, setFollowUpDate] = useState("");
   const [symptoms, setSymptoms] = useState("");
-  const [treatment, setTreatment] = useState("");
+  const [prescription, setPrescription] = useState("");
 
-  const handleSubmit = (e) => {
+  const Host_Ip = process.env.Host_Ip || "http://localhost:8010";
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Create a new record object
     const newRecord = {
-      selectedPatient,
+      userId: selectedPatient.userId,
+      pName: selectedPatient.pName,
       date,
       condition,
       notes,
       followUpDate,
       symptoms,
-      treatment,
+      prescription,
     };
 
-    // Log the new record to the console (or handle it as needed)
-    console.log(newRecord);
-    
-    // Optionally navigate away or reset the form
-    navigate("/staff/medical-records"); // Change to the desired path
+    try {
+      // Send POST request to backend
+      const response = await axios.post(
+        `${Host_Ip}/patient/medical/add`,
+        newRecord
+      );
+      if (response.status === 201) {
+        console.log("Record added:", response.data);
+        navigate("/staff/medical-records"); // Redirect after successful submission
+      }
+    } catch (error) {
+      console.error("Error adding record:", error);
+    }
+  };
+
+  const handlePatientChange = (e) => {
+    const patient = PATIENTS.find((p) => p.id == e.target.value);
+    setSelectedPatient({ userId: patient.id, pName: patient.name });
   };
 
   return (
@@ -47,15 +71,23 @@ const MedicalRecordForm = () => {
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         {/* Patient Selection */}
         <div>
-          <Typography variant="h6" color="blue-gray" className="mb-2">Select Patient</Typography>
+          <Typography variant="h6" color="blue-gray" className="mb-2">
+            Select Patient
+          </Typography>
           <Select
-            value={selectedPatient}
-            onChange={(e) => setSelectedPatient(e.target.value)}
+            name="selectedPatient"
+            id="selectedPatient"
+            value={selectedPatient.id}
+            onChange={handlePatientChange}
             className="!border-t-blue-gray-200 focus:!border-t-gray-900"
           >
-            <option value="" disabled>Select a patient</option>
-            {PATIENTS.map(patient => (
-              <option key={patient.id} value={patient.name}>{patient.name}</option>
+            <option value="" disabled>
+              Select a patient
+            </option>
+            {PATIENTS.map((patient) => (
+              <option key={patient.id} value={patient.id}>
+                {patient.name}
+              </option>
             ))}
           </Select>
         </div>
@@ -63,7 +95,9 @@ const MedicalRecordForm = () => {
         {/* Medical Record Fields */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Typography variant="h6" color="blue-gray" className="mb-2">Date</Typography>
+            <Typography variant="h6" color="blue-gray" className="mb-2">
+              Date
+            </Typography>
             <Input
               size="xs"
               type="date"
@@ -73,7 +107,9 @@ const MedicalRecordForm = () => {
             />
           </div>
           <div>
-            <Typography variant="h6" color="blue-gray" className="mb-2">Condition</Typography>
+            <Typography variant="h6" color="blue-gray" className="mb-2">
+              Condition
+            </Typography>
             <Input
               size="xs"
               placeholder="Enter condition"
@@ -85,7 +121,9 @@ const MedicalRecordForm = () => {
         </div>
 
         <div>
-          <Typography variant="h6" color="blue-gray" className="mb-2">Notes</Typography>
+          <Typography variant="h6" color="blue-gray" className="mb-2">
+            Notes
+          </Typography>
           <Textarea
             placeholder="Enter notes"
             value={notes}
@@ -96,7 +134,9 @@ const MedicalRecordForm = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Typography variant="h6" color="blue-gray" className="mb-2">Follow-up Date</Typography>
+            <Typography variant="h6" color="blue-gray" className="mb-2">
+              Follow-up Date
+            </Typography>
             <Input
               size="xs"
               type="date"
@@ -106,7 +146,9 @@ const MedicalRecordForm = () => {
             />
           </div>
           <div>
-            <Typography variant="h6" color="blue-gray" className="mb-2">Symptoms</Typography>
+            <Typography variant="h6" color="blue-gray" className="mb-2">
+              Symptoms
+            </Typography>
             <Input
               size="xs"
               placeholder="Enter symptoms"
@@ -118,11 +160,13 @@ const MedicalRecordForm = () => {
         </div>
 
         <div>
-          <Typography variant="h6" color="blue-gray" className="mb-2">Treatment</Typography>
+          <Typography variant="h6" color="blue-gray" className="mb-2">
+            Prescription
+          </Typography>
           <Textarea
-            placeholder="Enter treatment"
-            value={treatment}
-            onChange={(e) => setTreatment(e.target.value)}
+            placeholder="Enter prescription"
+            value={prescription}
+            onChange={(e) => setPrescription(e.target.value)}
             className="!border-t-blue-gray-200 focus:!border-t-gray-900"
           />
         </div>

@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { HiOutlineTrash, HiOutlineInformationCircle, HiOutlinePencilAlt } from "react-icons/hi";
 
 const DoctorCard = ({ doctor, onEdit, onDelete }) => {
-    const { name, specialty, hospital, rating, reviews } = doctor; // Destructure the doctor object
+    const { name, specialty, hospital, rating, reviews, image } = doctor; // Destructure the doctor object
     const navigate = useNavigate();
 
     const handleSeeMore = () => {
@@ -19,7 +19,7 @@ const DoctorCard = ({ doctor, onEdit, onDelete }) => {
     return (
         <Card className='mb-4 px-4 py-6 rounded-3xl flex flex-col sm:flex-row justify-between items-center'>
             <div className='flex items-center'>
-                <img src={icons.doctor} alt='Doctor' className='w-24 h-24 mr-4' />
+                <img src={image} alt='Doctor' className='w-24 h-24 mr-4' />
                 <div>
                     <div className='flex flex-row items-center justify-between mb-2'>
                         <Typography className='text-lg font-poppins font-bold md:truncate'>{name}</Typography>

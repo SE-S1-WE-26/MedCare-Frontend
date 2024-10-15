@@ -12,6 +12,9 @@ import DoctorCard from "../../components/pagecomponents/patient/DoctorCard";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios"; // Import Axios
 import images from "../../constants/images";
+import { storage } from "../../firebaseConfig"; // Import Firebase storage
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+
 
 const AppointmentForm = () => {
   const navigate = useNavigate();
@@ -29,10 +32,36 @@ const AppointmentForm = () => {
     notes: "",
   });
   const [termsAgreed, setTermsAgreed] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [fileUrl, setFileUrl] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+    }
+  };
+
+  const handleFileUpload = async () => {
+    if (!selectedFile) {
+      alert("Please select a file first.");
+      return;
+    }
+    
+    try {
+      const fileRef = ref(storage, `appointments/${selectedFile.name}`);
+      await uploadBytes(fileRef, selectedFile);
+      const downloadURL = await getDownloadURL(fileRef);
+      setFileUrl(downloadURL); 
+      alert("File uploaded successfully!");
+    } catch (error) {
+      console.error("Error uploading file:", error);
+    }
   };
 
   const handleCheckboxChange = (e) => {
@@ -48,25 +77,24 @@ const AppointmentForm = () => {
     }
 
     const appointmentData = {
-      userId: "59b99db4cfa9a34dcd7885b6", // Hardcoded userId for demo
+      userId: "59b99db4cfa9a34dcd7885b6", 
       date: formData.date,
       time: formData.time,
       userName: formData.fullName,
       doctorName: doctor.name,
       doctorType: doctor.specialty,
-      doctorPic: doctor.image || 'fakeImage.png', // Assuming the doctor image is in doctor object
+      doctorPic: doctor.image || 'fakeImage.png',
       problem: formData.problem,
       notes: formData.notes,
       additionalInfo: formData.additionalInfo,
-      file: "images.xray",
+      file: fileUrl, 
     };
 
     try {
-      // Send a POST request to create an appointment
-      console.log("Appointment data:", appointmentData);
+      handleFileUpload();
       const response = await axios.post(`${Host_Ip}/patient/appointments/add`, appointmentData);
-      console.log(response.data); // Handle success
-      navigate("/patient/payment-form"); // Navigate to payment form on success
+      console.log(response.data); 
+      navigate("/patient/payment-form"); 
     } catch (error) {
       console.error("Error creating appointment:", error);
     }
@@ -200,23 +228,27 @@ const AppointmentForm = () => {
               </div>
 
               {/* File Upload Section with Button */}
+              {/* File Upload Section */}
               <div className="flex flex-col">
+                <input
+                  type="file"
+                  onChange={handleFileChange}
+                  className="hidden"
+                  id="file-upload"
+                />
                 <Button
                   className="bg-blue-500 text-white rounded-md mt-2"
-                  onClick={() =>
-                    alert("File upload functionality not implemented yet.")
-                  }
+                  onClick={() => document.getElementById("file-upload").click()}
                   fullWidth
                 >
-                  Upload Files
+                  Select File
                 </Button>
-                <Typography
-                  variant="small"
-                  color="gray"
-                  className="mt-2 text-center"
-                >
-                  (Click to upload files)
-                </Typography>
+
+                {fileUrl && (
+                  <Typography variant="small" color="gray" className="mt-2 text-center">
+                    File uploaded successfully!
+                  </Typography>
+                )}
               </div>
 
               {/* Checkbox for Terms and Conditions */}
