@@ -57,6 +57,7 @@ const AppointmentForm = () => {
       const fileRef = ref(storage, `appointments/${selectedFile.name}`);
       await uploadBytes(fileRef, selectedFile);
       const downloadURL = await getDownloadURL(fileRef);
+     
       setFileUrl(downloadURL); 
       alert("File uploaded successfully!");
     } catch (error) {
@@ -70,35 +71,50 @@ const AppointmentForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!termsAgreed) {
       alert("You must agree to the terms and conditions.");
       return;
     }
-
+  
+    let uploadedFileUrl = "";
+  
+    // Upload the file if it’s selected
+    if (selectedFile) {
+      try {
+        const fileRef = ref(storage, `appointments/${selectedFile.name}`);
+        await uploadBytes(fileRef, selectedFile);
+        uploadedFileUrl = await getDownloadURL(fileRef);
+      } catch (error) {
+        console.error("Error uploading file:", error);
+        return; // Exit if the file upload fails
+      }
+    }
+  
     const appointmentData = {
-      userId: "59b99db4cfa9a34dcd7885b6", 
+      userId: "59b99db4cfa9a34dcd7885b6",
       date: formData.date,
       time: formData.time,
       userName: formData.fullName,
       doctorName: doctor.name,
       doctorType: doctor.specialty,
-      doctorPic: doctor.image || 'fakeImage.png',
+      doctorPic: doctor.image || "fakeImage.png",
       problem: formData.problem,
       notes: formData.notes,
       additionalInfo: formData.additionalInfo,
-      file: fileUrl, 
+      file: uploadedFileUrl || fileUrl // Assign the correct file URL here
     };
-
+  
     try {
-      handleFileUpload();
       const response = await axios.post(`${Host_Ip}/patient/appointments/add`, appointmentData);
-      console.log(response.data); 
-      navigate("/patient/payment-form"); 
+      console.log(response.data);
+      navigate("/patient/payment-form");
     } catch (error) {
       console.error("Error creating appointment:", error);
     }
   };
+  
+  
 
   if (!doctor) {
     return <div>No doctor selected</div>; // Handle case where no doctor is passed

@@ -26,7 +26,6 @@ const AppointmentsTable = () => {
 
   const Host_Ip = process.env.Host_Ip || "http://localhost:8010";
 
-
   const fetchAppointmentDetails = async () => {
     try {
       // Fetch Demographic Data
@@ -42,7 +41,6 @@ const AppointmentsTable = () => {
   };
 
   useEffect(() => {
-
     fetchAppointmentDetails();
   }, []);
 
@@ -88,7 +86,7 @@ const AppointmentsTable = () => {
               ))}
             </tr>
           </thead>
-          <tbody> console.log(appointment);
+          <tbody>
             {appointment.map(
               (
                 {
@@ -101,7 +99,7 @@ const AppointmentsTable = () => {
                   problem,
                   notes,
                   additionalInfo,
-                  file
+                  file,
                 },
                 index
               ) => {
@@ -164,15 +162,6 @@ const AppointmentsTable = () => {
                           >
                             {isOpen ? "See Less" : "See More"}
                           </Button>
-                          <Button
-                            color="red"
-                            size="sm"
-                            onClick={() => {
-                              handleDelete(_id);
-                            }}
-                          >
-                            Delete
-                          </Button>
                         </div>
                       </td>
                     </tr>
@@ -184,7 +173,7 @@ const AppointmentsTable = () => {
                           <Accordion open={isOpen}>
                             <AccordionBody>
                               <div className="grid grid-cols-8 gap-8 justify-center">
-                                <div className="col-span-6">
+                                <div className="col-span-3">
                                   <strong className="font-bold text-black">
                                     Additional Info:
                                   </strong>
@@ -196,6 +185,7 @@ const AppointmentsTable = () => {
                                     {additionalInfo}
                                   </Typography>
                                 </div>
+
                                 <div className="col-span-2">
                                   <strong className="font-bold text-black">
                                     Notes:
@@ -207,6 +197,33 @@ const AppointmentsTable = () => {
                                   >
                                     {notes}
                                   </Typography>
+                                </div>
+                                <div className="">
+                                  <Button
+                                    className="bg-green-500 text-white rounded-md "
+                                    size="sm"
+                                    onClick={() => {
+                                      console.log("File URL:", file); // Debug: Check if file has a value
+                                      if (file) {
+                                        window.open(file, "_blank");
+                                      } else {
+                                        alert("No file URL available");
+                                      }
+                                    }}
+                                  >
+                                    Download File
+                                  </Button>
+                                </div>
+                                <div>
+                                  <Button
+                                    color="red"
+                                    size="sm"
+                                    onClick={() => {
+                                      handleDelete(_id);
+                                    }}
+                                  >
+                                    Delete Record
+                                  </Button>
                                 </div>
                               </div>
                             </AccordionBody>
@@ -227,6 +244,7 @@ const AppointmentsTable = () => {
         {appointment.map(
           (
             {
+              _id,
               doctorPic,
               doctorName,
               doctorType,
@@ -235,6 +253,7 @@ const AppointmentsTable = () => {
               problem,
               notes,
               additionalInfo,
+              file,
             },
             index
           ) => {
@@ -327,6 +346,33 @@ const AppointmentsTable = () => {
                             >
                               {notes}
                             </Typography>
+                          </div>
+                          <div className="mt-6">
+                            <Button
+                              className="bg-green-500 text-white rounded-md "
+                              size="sm"
+                              onClick={() => {
+                                console.log("File URL:", file); // Debug: Check if file has a value
+                                if (file) {
+                                  window.open(file, "_blank");
+                                } else {
+                                  alert("No file URL available");
+                                }
+                              }}
+                            >
+                              Download File
+                            </Button>
+                          </div>
+                          <div className="mt-6">
+                            <Button
+                              color="red"
+                              size="sm"
+                              onClick={() => {
+                                handleDelete(_id);
+                              }}
+                            >
+                              Delete Record
+                            </Button>
                           </div>
                         </div>
                       </AccordionBody>
