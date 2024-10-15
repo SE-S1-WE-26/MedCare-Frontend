@@ -14,6 +14,7 @@ const DoctorCard = ({ doctor, onEdit, onDelete }) => {
     const handleSeeMore = () => {
         navigate('/doctor/profile', { state: { doctor } });
     };
+    // Testing Comment for DoctorCard
 
     return (
         <Card className='mb-4 px-4 py-6 rounded-3xl flex flex-col sm:flex-row justify-between items-center'>
