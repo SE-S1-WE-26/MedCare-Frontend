@@ -6,11 +6,9 @@ import {
   Accordion,
   AccordionBody,
 } from "@material-tailwind/react";
-import images from "../../../constants/images";
 import { HiOutlineChatAlt2, HiOutlineInformationCircle } from "react-icons/hi";
 import axios from "axios";
-import icons from "../../../constants/images";
-import { Navigate } from "react-router-dom";
+
 // Sample Data
 const TABLE_HEAD = ["Appointment", "Appointment Type", "Appointment", "Action"];
 
