@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Card, Typography, Button, Input } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
+import { storage } from "../../../firebaseConfig";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const StaffForm = () => {
   const navigate = useNavigate();
@@ -14,44 +16,64 @@ const StaffForm = () => {
   const [profilePic, setProfilePic] = useState(null);
   const [profilePicPreview, setProfilePicPreview] = useState("");
 
+  // Store selected profile picture
   const handleProfilePicChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setProfilePic(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfilePicPreview(reader.result);
-      };
-      reader.readAsDataURL(file);
+      setProfilePicPreview(URL.createObjectURL(file)); // local preview
     }
   };
 
-  const handleSubmit = (e) => {
+  const Host_Ip = process.env.Host_Ip || "http://localhost:8010";
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Create a new staff member object
-    const newStaffMember = {
-      name,
-      specialty,
-      hospital,
-      rating,
-      reviews,
-      profilePic,
-    };
+    try {
+      let profilePicURL = "";
 
-    // Log the new staff member to the console (or handle it as needed)
-    console.log(newStaffMember);
-    
-    // Optionally navigate away or reset the form
-    navigate("/staff/staff"); // Change to the desired path
+      if (profilePic) {
+        // Upload image to Firebase
+        const storageRef = ref(storage, `doctors/${profilePic.name+name}`);
+        await uploadBytes(storageRef, profilePic);
+
+        // Get the download URL
+        profilePicURL = await getDownloadURL(storageRef);
+      }
+
+      // Construct staff data with Firebase URL
+      const newStaffMember = {
+        name,
+        specialty,
+        hospital,
+        rating,
+        reviews,
+        image: profilePicURL, // send Firebase image URL
+      };
+
+      // Submit form data to backend
+      const response = await fetch(`${Host_Ip}/patient/doctors/add`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newStaffMember),
+      });
+
+      if (response.ok) {
+        navigate("/staff/staff"); // Adjust as needed
+      }
+    } catch (error) {
+      console.error("Error uploading or saving staff data:", error);
+    }
   };
 
   return (
-    <Card className="p-8 rounded-3xl max-w-md mx-auto"> {/* Set max width and center */}
+    <Card className="p-8 rounded-3xl max-w-md mx-auto">
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        {/* Name Field */}
         <div>
-          <Typography variant="h6" color="blue-gray" className="mb-2">Name</Typography>
+          <Typography variant="h6" color="blue-gray" className="mb-2">
+            Name
+          </Typography>
           <Input
             size="xs"
             placeholder="Enter name"
@@ -60,10 +82,10 @@ const StaffForm = () => {
             className="!border-t-blue-gray-200 focus:!border-t-gray-900"
           />
         </div>
-
-        {/* Specialty Field */}
         <div>
-          <Typography variant="h6" color="blue-gray" className="mb-2">Specialty</Typography>
+          <Typography variant="h6" color="blue-gray" className="mb-2">
+            Specialty
+          </Typography>
           <Input
             size="xs"
             placeholder="Enter specialty"
@@ -72,10 +94,10 @@ const StaffForm = () => {
             className="!border-t-blue-gray-200 focus:!border-t-gray-900"
           />
         </div>
-
-        {/* Hospital Field */}
         <div>
-          <Typography variant="h6" color="blue-gray" className="mb-2">Hospital/Clinic</Typography>
+          <Typography variant="h6" color="blue-gray" className="mb-2">
+            Hospital/Clinic
+          </Typography>
           <Input
             size="xs"
             placeholder="Enter hospital/clinic name"
@@ -84,10 +106,10 @@ const StaffForm = () => {
             className="!border-t-blue-gray-200 focus:!border-t-gray-900"
           />
         </div>
-
-        {/* Rating Field */}
         <div>
-          <Typography variant="h6" color="blue-gray" className="mb-2">Rating</Typography>
+          <Typography variant="h6" color="blue-gray" className="mb-2">
+            Rating
+          </Typography>
           <Input
             size="xs"
             type="number"
@@ -99,10 +121,10 @@ const StaffForm = () => {
             max="5"
           />
         </div>
-
-        {/* Reviews Field */}
         <div>
-          <Typography variant="h6" color="blue-gray" className="mb-2">Reviews</Typography>
+          <Typography variant="h6" color="blue-gray" className="mb-2">
+            Reviews
+          </Typography>
           <Input
             size="xs"
             type="number"
@@ -122,15 +144,12 @@ const StaffForm = () => {
             className="hidden"
             id="profile-pic-upload"
           />
-          <label htmlFor="profile-pic-upload">
-            <Button
-              className="bg-blue-500 text-white rounded-md mt-2"
-              component="span"
-              fullWidth
-            >
-              Upload Profile Picture
-            </Button>
-          </label>
+          <Button
+            className="bg-blue-500 text-white rounded-md mt-2"
+            onClick={() => document.getElementById("profile-pic-upload").click()}
+          >
+            Upload Profile Picture
+          </Button>
           {profilePicPreview && (
             <img
               src={profilePicPreview}

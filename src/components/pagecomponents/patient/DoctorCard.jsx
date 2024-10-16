@@ -6,7 +6,7 @@ import { HiStar } from "react-icons/hi";
 import { useNavigate } from 'react-router-dom';
 
 const DoctorCard = ({ doctor }) => {
-    const { name, specialty, hospital, rating, reviews } = doctor; // Destructure the doctor object
+    const { name, specialty, hospital, rating, reviews , image} = doctor; // Destructure the doctor object
     const navigate = useNavigate();
 
     const handleDoctorClick = () => {
@@ -16,7 +16,7 @@ const DoctorCard = ({ doctor }) => {
     return (
         <Card className='mb-4 px-4 py-6 rounded-3xl' onClick={handleDoctorClick}>
           <div className='flex items-center px-2'>
-            <img src={icons.doctor} alt='Doctor' className='w-24 h-24 mr-4' />
+            <img src={image} alt='Doctor' className='w-24 h-24 mr-4' />
             <div className='w-full'>
               <div className='flex flex-row items-center justify-between mb-2'>
                 <Typography className='text-lg font-poppins font-bold md:truncate'>{name}</Typography>
