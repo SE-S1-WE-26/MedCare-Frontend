@@ -4,10 +4,10 @@ import {formatDate} from '../../../utils/dateUtils';
 
 const TABLE_HEAD = ["Date", "Condition", "Notes", "Follow-up Date", "Action"];
 
-const user = JSON.parse(localStorage.getItem("userData"));
-const Host_Ip = process.env.REACT_APP_HOST_IP || "http://localhost:8010";
-
 export function MedicalRecordsTable() {
+  const user = JSON.parse(localStorage.getItem("userData"));
+  const Host_Ip = process.env.REACT_APP_HOST_IP || "http://localhost:8010";
+  
   const [medicalRecords, setMedicalRecords] = useState([]);
   const [openIndex, setOpenIndex] = useState(null);
 

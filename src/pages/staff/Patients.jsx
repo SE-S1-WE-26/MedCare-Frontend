@@ -3,23 +3,27 @@ import PageTitle from '../../components/pagecomponents/PageTitle';
 import PatientCard from '../../components/pagecomponents/staff/PatientCard';
 import SearchBar from '../../components/pagecomponents/SearchBar';
 import axios from 'axios';
-import icons from '../../constants/icons';
+import Loader from '../../components/pagecomponents/Loader'; // Import your Loader component
 
 const Patients = () => {
   const [patients, setPatients] = useState([]);
   const [filteredPatients, setFilteredPatients] = useState([]);
+  const [loading, setLoading] = useState(true); // Loading state
 
   const Host_Ip = process.env.Host_Ip || 'http://localhost:8010';
 
   // Fetch patients when the component loads
   useEffect(() => {
     const fetchPatients = async () => {
+      setLoading(true); // Set loading to true before fetching
       try {
         const response = await axios.get(`${Host_Ip}/patients/`);
         setPatients(response.data);
         setFilteredPatients(response.data); // Initialize filteredPatients with the fetched data
       } catch (error) {
         console.error('Error fetching patients:', error);
+      } finally {
+        setLoading(false); // Set loading to false after fetching
       }
     };
     fetchPatients();
@@ -57,14 +61,20 @@ const Patients = () => {
         onChange={handleSearchChange}
       />
       <div className="mt-6 overflow-y-scroll max-h-[70vh]">
-        {filteredPatients.map((patient) => (
-          <PatientCard
-            key={patient._id}
-            patient={patient}
-            onEdit={() => handleEdit(patient)}
-            onDelete={() => handleDelete(patient._id)}
-          />
-        ))}
+        {loading ? (
+          <div className="flex justify-center items-center h-full">
+            <Loader /> {/* Common loader component */}
+          </div>
+        ) : (
+          filteredPatients.map((patient) => (
+            <PatientCard
+              key={patient._id}
+              patient={patient}
+              onEdit={() => handleEdit(patient)}
+              onDelete={() => handleDelete(patient._id)}
+            />
+          ))
+        )}
       </div>
     </div>
   );

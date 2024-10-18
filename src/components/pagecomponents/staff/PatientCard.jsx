@@ -3,7 +3,6 @@ import { Card, Typography, Button } from '@material-tailwind/react';
 import { HiOutlineTrash, HiOutlineInformationCircle, HiOutlinePencilAlt } from "react-icons/hi";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Loader from '../../pagecomponents/Loader'; 
 import { fetchPatientDetails } from "../../../utils/patientUtils";
 
 const PatientCard = ({ patient, onEdit, onDelete }) => {
@@ -11,12 +10,10 @@ const PatientCard = ({ patient, onEdit, onDelete }) => {
     const navigate = useNavigate();
     const [userDetails, setUserDetails] = useState(null);
     const [patientDetails, setPatientDetails] = useState(null);
-    const [loading, setLoading] = useState(true);
     const Host_Ip = process.env.Host_Ip || 'http://localhost:8010';
 
     useEffect(() => {
         const fetchDetails = async () => {
-            setLoading(true);
             try {
                 const userResponse = await axios.get(`${Host_Ip}/user/${userId}`);
                 setUserDetails(userResponse.data);
@@ -25,8 +22,6 @@ const PatientCard = ({ patient, onEdit, onDelete }) => {
                 setPatientDetails(demographicData);
             } catch (error) {
                 console.error('Error fetching details:', error);
-            } finally {
-                setLoading(false);
             }
         };
 
@@ -39,16 +34,8 @@ const PatientCard = ({ patient, onEdit, onDelete }) => {
         navigate('/patients/profile', { state: { patient: userDetails } });
     };
 
-    if (loading) {
-        return (
-            <div className="flex my-auto justify-center items-center h-full">
-                <Loader />
-            </div>
-        );
-    }
-
     if (!userDetails || !patientDetails) {
-        return null; // or a loading spinner if preferred
+        return null; // Render nothing or a placeholder if data is not available
     }
 
     const { firstName, lastName, birthday, gender, mobileNumber } = patientDetails;

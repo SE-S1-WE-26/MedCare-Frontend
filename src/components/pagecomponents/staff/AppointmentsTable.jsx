@@ -153,15 +153,12 @@ export function StaffAppointmentsTable() {
                       {/* Action Buttons */}
                       <td className={classes}>
                         <div className="flex space-x-4">
-                          <Button color="green" size="sm">
-                            Chat
-                          </Button>
                           <Button
                             onClick={() => handleToggleAccordion(index)}
                             color="blue"
                             size="sm"
                           >
-                            {isOpen ? "See Less" : "See More"}
+                            {isOpen ? "See Less" : <HiOutlineInformationCircle size={20}/>}
                           </Button>
                         </div>
                       </td>
