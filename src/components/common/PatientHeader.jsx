@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import icons from "../../constants/icons";
 
-const PatientHeader = ({ patientId }) => {
+const PatientHeader = () => {
   const user = JSON.parse(localStorage.getItem("userData"));
   const userId = user?._id;
   const profileImage = user?.image;
@@ -61,7 +61,6 @@ const PatientHeader = ({ patientId }) => {
         <button className="flex-1 border-2 rounded-full w-14">
           <img
             src={profileImage}
-            alt="Profile"
             className="object-cover w-full h-full rounded-full"
           />
         </button>

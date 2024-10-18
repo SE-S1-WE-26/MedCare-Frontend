@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import { QRCodeSVG } from "qrcode.react"; // Assuming you're using a QR code library
 import { Card, CardHeader, CardBody, Typography, CardFooter } from "@material-tailwind/react";
-import icons from "../../constants/icons";
 import BackNavigation from "../../components/pagecomponents/BackNavigation";
 import { fetchPatientDetails } from "../../utils/patientUtils";
+import Loader from '../../components/pagecomponents/Loader'
 
 const MyQR = () => {
   const user = JSON.parse(localStorage.getItem("userData"));
@@ -43,7 +43,7 @@ const MyQR = () => {
   const mobileNumber = patientDetails?.mobileNumber || "";
 
   if (loading) {
-    return <div>Loading...</div>; // Show a loading state
+    return <div className='flex w-full my-auto justify-center'><Loader/></div>; // Show a loading state
   }
 
   if (!patientDetails) {

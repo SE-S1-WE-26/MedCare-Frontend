@@ -5,6 +5,9 @@ import images from '../../constants/images';
 import icons from '../../constants/icons';
 
 const StaffHeader = () => {
+  const user = JSON.parse(localStorage.getItem("userData"));
+  const userId = user?._id;
+  const profileImage = user?.image;
   const [selected, setSelected] = useState("/");
   const navigate = useNavigate();
 
@@ -45,7 +48,7 @@ const StaffHeader = () => {
         </button>
         <button className="flex-1 border-2 rounded-full w-14">
           <img
-            src={images.doctor}
+            src={profileImage}
             alt="Profile"
             className="object-cover w-full h-full rounded-full"
           />

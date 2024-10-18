@@ -20,6 +20,7 @@ const Header = ({ userRole, setUserRole }) => {
   const handleLogout = () => {
     setUserRole(null); // Clear the role on logout
     localStorage.removeItem('userRole'); // Remove role from localStorage
+    localStorage.removeItem('userData');
     navigate('/'); // Redirect to landing page
   };
 
