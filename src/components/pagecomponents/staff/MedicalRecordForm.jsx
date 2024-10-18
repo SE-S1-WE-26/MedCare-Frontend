@@ -1,26 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   Typography,
   Button,
   Input,
   Textarea,
-  Select,
 } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; // Add axios for API requests
-
-// Sample patient data for the dropdown
-const PATIENTS = [
-  { id: "59b99db4cfa9a34dcd7885b6", name: "John Doe" },
-  { id: "59b99db4cfa9a34dcd7885b7", name: "Jane Smith" },
-  { id: "59b99db4cfa9a34dcd7885b8", name: "Alice Johnson" },
-];
+import axios from "axios";
 
 const MedicalRecordForm = () => {
   const navigate = useNavigate();
 
   // State for form fields
+  const [patients, setPatients] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState("");
   const [date, setDate] = useState("");
   const [condition, setCondition] = useState("");
@@ -31,13 +24,29 @@ const MedicalRecordForm = () => {
 
   const Host_Ip = process.env.Host_Ip || "http://localhost:8010";
 
+  // Fetch patients when the component loads
+  useEffect(() => {
+    const fetchPatients = async () => {
+      try {
+        const response = await axios.get(`${Host_Ip}/patients/`);
+        setPatients(response.data);
+      } catch (error) {
+        console.error("Error fetching patients:", error);
+      }
+    };
+    fetchPatients();
+  }, [Host_Ip]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Find the selected patient's information
+    const selectedPatientInfo = patients.find((p) => p._id === selectedPatient);
+
     // Create a new record object
     const newRecord = {
-      userId: selectedPatient.userId,
-      pName: selectedPatient.pName,
+      userId: selectedPatientInfo.userId,
+      pname: selectedPatientInfo.name,
       date,
       condition,
       notes,
@@ -62,8 +71,7 @@ const MedicalRecordForm = () => {
   };
 
   const handlePatientChange = (e) => {
-    const patient = PATIENTS.find((p) => p.id == e.target.value);
-    setSelectedPatient({ userId: patient.id, pName: patient.name });
+    setSelectedPatient(e.target.value);
   };
 
   return (
@@ -74,22 +82,22 @@ const MedicalRecordForm = () => {
           <Typography variant="h6" color="blue-gray" className="mb-2">
             Select Patient
           </Typography>
-          <Select
+          <select
             name="selectedPatient"
             id="selectedPatient"
-            value={selectedPatient.id}
+            value={selectedPatient}
             onChange={handlePatientChange}
-            className="!border-t-blue-gray-200 focus:!border-t-gray-900"
+            className="w-full p-2 border border-gray-300 rounded"
           >
             <option value="" disabled>
               Select a patient
             </option>
-            {PATIENTS.map((patient) => (
-              <option key={patient.id} value={patient.id}>
+            {patients.map((patient) => (
+              <option key={patient._id} value={patient._id}>
                 {patient.name}
               </option>
             ))}
-          </Select>
+          </select>
         </div>
 
         {/* Medical Record Fields */}

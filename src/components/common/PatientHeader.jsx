@@ -3,6 +3,10 @@ import { useNavigate } from "react-router-dom";
 import icons from "../../constants/icons";
 
 const PatientHeader = ({ patientId }) => {
+  const user = JSON.parse(localStorage.getItem("userData"));
+  const userId = user?._id;
+  const profileImage = user?.image;
+
   const [selected, setSelected] = useState("/");
   const navigate = useNavigate();
 
@@ -13,7 +17,7 @@ const PatientHeader = ({ patientId }) => {
 
   const handleQR = () => {
     // Navigate to MyQR page with patientId as a URL parameter
-    navigate(`/patient/my-qr/${patientId}`);
+    navigate(`/patient/my-qr/${userId}`);
   };
 
   const sections = [
@@ -56,7 +60,7 @@ const PatientHeader = ({ patientId }) => {
         </button>
         <button className="flex-1 border-2 rounded-full w-14">
           <img
-            src={icons.profilepic}
+            src={profileImage}
             alt="Profile"
             className="object-cover w-full h-full rounded-full"
           />
