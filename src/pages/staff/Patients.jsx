@@ -10,7 +10,7 @@ const Patients = () => {
   const [filteredPatients, setFilteredPatients] = useState([]);
   const [loading, setLoading] = useState(true); // Loading state
 
-  const Host_Ip = process.env.Host_Ip || 'http://localhost:8010';
+  const Host_Ip = process.env.Host_Ip || 'https://medcare-backend.vercel.app';
 
   // Fetch patients when the component loads
   useEffect(() => {

@@ -24,7 +24,7 @@ export function StaffAppointmentsTable() {
   const [openIndex, setOpenIndex] = useState(null);
   const [appointment, setAppointment] = useState([]);
 
-  const Host_Ip = process.env.Host_Ip || "http://localhost:8010";
+  const Host_Ip = process.env.Host_Ip || "https://medcare-backend.vercel.app";
 
   const fetchAppointmentDetails = async () => {
     try {

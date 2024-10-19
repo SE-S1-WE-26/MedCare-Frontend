@@ -21,9 +21,13 @@ const AppointmentForm = () => {
   const location = useLocation();
   const { doctor } = location.state || {}; // Access the passed doctor object
 
-  const Host_Ip = process.env.REACT_APP_HOST_IP || "http://localhost:8010";
+  const user = JSON.parse(localStorage.getItem("userData"));
+  const userId = user?._id;
+
+  const Host_Ip = process.env.REACT_APP_HOST_IP || "https://medcare-backend.vercel.app";
 
   const [formData, setFormData] = useState({
+
     date: "",
     time: "",
     fullName: "",

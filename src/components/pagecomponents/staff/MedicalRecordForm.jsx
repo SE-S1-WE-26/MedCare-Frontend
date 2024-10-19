@@ -22,7 +22,7 @@ const MedicalRecordForm = () => {
   const [symptoms, setSymptoms] = useState("");
   const [prescription, setPrescription] = useState("");
 
-  const Host_Ip = process.env.Host_Ip || "http://localhost:8010";
+  const Host_Ip = process.env.Host_Ip || "https://medcare-backend.vercel.app";
 
   // Fetch patients when the component loads
   useEffect(() => {
