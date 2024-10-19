@@ -11,6 +11,7 @@ const SignIn = ({ setUserRole }) => {
 
   useEffect(() => {
     localStorage.removeItem("token");
+    localStorage.removeItem("userData");
   }, []);
 
   const handleSignIn = async (e) => {

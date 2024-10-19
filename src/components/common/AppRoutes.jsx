@@ -33,6 +33,8 @@ import CreateMedicalRecord from '../../pages/staff/CreateMedicalRecord';
 import CreateStaff from '../../pages/staff/CreateStaff';
 import PatientInfo from '../../pages/staff/PatientInfo';
 
+import AdminDashboard from '../../pages/admin/Dashboard';
+
 
 const AppRoutes = ({ setUserRole }) => {
   return (
@@ -67,6 +69,8 @@ const AppRoutes = ({ setUserRole }) => {
       <Route path="/staff/staff" element={<StaffStaff />} />
       <Route path="/staff/staff-form" element={<CreateStaff />} />
       <Route path="/staff/patient-info" element={<PatientInfo />} />
+
+      <Route path="/admin" element={<AdminDashboard />} />
     </Routes>
   );
 };
