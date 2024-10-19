@@ -6,7 +6,7 @@ const PatientBioForm = () => {
   const { patientId } = useParams();
   console.log("patientId:", patientId);
 
-  const Host_Ip = process.env.REACT_APP_HOST_IP || "http://localhost:8010";
+  const Host_Ip = process.env.REACT_APP_HOST_IP || "https://medcare-backend.vercel.app";
 
   const [formData, setFormData] = useState({
     userId: patientId,

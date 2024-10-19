@@ -16,7 +16,7 @@ const PatientInfo = () => {
   const [loading, setLoading] = useState(true);
   const [userDetails, setUserDetails] = useState(null);
 
-  const Host_Ip = process.env.Host_Ip || 'http://localhost:8010';
+  const Host_Ip = process.env.Host_Ip || 'https://medcare-backend.vercel.app';
 
   const navigate = useNavigate();
 
