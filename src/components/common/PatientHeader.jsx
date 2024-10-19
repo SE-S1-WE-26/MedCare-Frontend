@@ -2,8 +2,12 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import icons from "../../constants/icons";
 
-const PatientHeader = ({ patientId }) => {
-  const [selected, setSelected] = useState("/");
+const PatientHeader = () => {
+  const user = JSON.parse(localStorage.getItem("userData"));
+  const userId = user?._id;
+  const profileImage = user?.image;
+
+  const [selected, setSelected] = useState("/patient");
   const navigate = useNavigate();
 
   const handleMenuClick = (link) => {
@@ -13,7 +17,7 @@ const PatientHeader = ({ patientId }) => {
 
   const handleQR = () => {
     // Navigate to MyQR page with patientId as a URL parameter
-    navigate(`/patient/my-qr/${patientId}`);
+    navigate(`/patient/my-qr/${userId}`);
   };
 
   const sections = [
@@ -34,7 +38,7 @@ const PatientHeader = ({ patientId }) => {
         }`}
       >
         <p
-          className={`font-medium ${
+          className={`font-medium text-xs ${
             selected === section.link ? "text-black" : "text-white"
           }`}
         >
@@ -45,22 +49,21 @@ const PatientHeader = ({ patientId }) => {
   ));
 
   return (
-    <div className="flex flex-col md:flex-row gap-2 w-full">
-      {renderMenu}
-      <div className="flex flex-row gap-2 w-full justify-between">
-        <button 
-          className="flex-1 p-2 bg-light-blue rounded-lg w-10 flex items-center justify-center" 
-          onClick={handleQR}
-        > 
-          <img src={icons.qr} alt="QR" className="w-6 h-6" />
-        </button>
-        <button className="flex-1 border-2 rounded-full w-14">
-          <img
-            src={icons.profilepic}
-            alt="Profile"
-            className="object-cover w-full h-full rounded-full"
-          />
-        </button>
+    <div className="flex flex-col md:flex md:flex-row items-center gap-4"> {/* Increased gap for better spacing */}
+      <div className="flex flex-col md:flex md:flex-row flex flex-row gap-2">{renderMenu}</div> {/* Adjusted gap for clarity */}
+      <div className="flex flex-row items-center gap-2">
+      <button 
+        className="bg-light-blue p-1 rounded-lg flex items-center justify-center w-8 h-8" 
+        onClick={handleQR}
+      > 
+        <img src={icons.qr} alt="QR" className="w-6 h-6" /> {/* Increased image size */}
+      </button>
+      <button className="border-2 rounded-full flex items-center justify-center w-8 h-8">
+        <img
+          src={profileImage}
+          className="object-cover rounded-full w-full h-full"
+        />
+      </button>
       </div>
     </div>
   );

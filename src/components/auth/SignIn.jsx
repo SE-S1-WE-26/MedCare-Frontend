@@ -1,97 +1,108 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import images from "../../constants/images";
-
 import { Button, Card, Typography } from "@material-tailwind/react";
 
 const SignIn = ({ setUserRole }) => {
   const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleSignIn = (role) => {
-    console.log("Sign In as:", role);
-    setUserRole(role); // Set user role in Layout
-    navigate(`/${role}`); // Navigate to the specified role
+  useEffect(() => {
+    localStorage.removeItem("token");
+  }, []);
+
+  const handleSignIn = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("http://localhost:8010/auth/login", { username, password });
+      const { token, role } = response.data;
+      localStorage.setItem("token", token);
+      setUserRole(role);
+      navigate(`/${role}`);
+
+      const verifyResponse = await axios.get("http://localhost:8010/auth/verify", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const userId = verifyResponse.data.user.id;
+      const userResponse = await axios.get(`http://localhost:8010/user/${userId}`);
+      localStorage.setItem("userData", JSON.stringify(userResponse.data));
+
+    } catch (error) {
+      console.error("Sign-in error:", error);
+    }
+  };
+
+  const handleTestLogin = (role) => {
+    setUserRole(role);
+    navigate(`/${role}`);
+  };
+
+  const handleRegisterNavigate = () => {
+    navigate("/register");
   };
 
   return (
-    <div className="w-full h-full m-8 flex">
-      {/* Left Section for Login Form */}
-      <div className="md:w-1/3 w-full">
-        <Card className="py-8 px-6 rounded-3xl">
-          <img src={images.logo} alt="logo" className="w-12 mx-auto" />
-          <div className="py-8">
-            <Typography className="font-semibold font-poppins text-xl">
-              Login
-            </Typography>
-            <div>
-              <div className="mt-4">
-                <label className="text-xs font-semibold">Username</label>
-                <input
-                  type="text"
-                  className="w-full border-b border-gray-300 py-2 p-2 focus:outline-none"
-                />
-              </div>
-              <div className="mt-4">
-                <label className="text-xs font-semibold">Password</label>
-                <input
-                  type="password"
-                  className="w-full border-b border-gray-300 p-2 focus:outline-none"
-                />
-              </div>
-            </div>
-          </div>
-          <Button
-            style={{ textTransform: "none" }}
-            className="rounded-2xl bg-dark-blue w-full" // Added full width
-          >
-            <Typography className="font-semibold">Sign In</Typography>
-          </Button>
-        </Card>
-
-        {/* Test Login Section */}
-        <Card className="py-6 px-6 rounded-3xl mt-4">
-          <Typography className="font-semibold font-poppins text-lg mb-4 text-center">
-            Test Login
-          </Typography>
-          <div className="flex flex-col gap-2">
+    <div className="flex flex-col items-center m-8 w-full h-full">
+      <div className="flex flex-1 items-center w-full">
+        <div className="md:w-1/3 w-full flex flex-col justify-center">
+          <Card className="py-8 px-12 rounded-3xl">
+            <img src={images.logo} alt="logo" className="w-12 mx-auto my-8" />
+            <Typography className="font-semibold text-xl">Login</Typography>
+            <form className="mt-4">
+              <label className="text-xs font-semibold">Username</label>
+              <input
+                type="text"
+                className="w-full border-b border-gray-300 py-2 px-4 focus:outline-none text-sm rounded-lg"
+                onChange={(e) => setUsername(e.target.value)}
+                value={username}
+              />
+              <label className="text-xs font-semibold mt-4">Password</label>
+              <input
+                type="password"
+                className="w-full border-b border-gray-300 py-2 px-4 focus:outline-none text-sm rounded-lg"
+                onChange={(e) => setPassword(e.target.value)}
+                value={password}
+              />
+            </form>
             <Button
-              style={{ textTransform: "none" }}
-              onClick={() => handleSignIn("patient")}
-              className="rounded-2xl bg-dark-blue"
+              className="bg-dark-blue rounded-2xl w-full mt-8"
+              onClick={handleSignIn}
             >
-              <Typography className="font-semibold text-xs">Patient</Typography>
+              Sign In
             </Button>
-            <Button
-              style={{ textTransform: "none" }}
-              onClick={() => handleSignIn("staff")}
-              className="rounded-2xl bg-dark-blue"
-            >
-              <Typography className="font-semibold text-xs">
-                Staff Member
-              </Typography>
-            </Button>
-          </div>
-        </Card>
-      </div>
+            <div className="flex mt-8">
+              <Typography className="text-xs font-medium text-gray-500">Don't have an account?</Typography>
+              <button onClick={handleRegisterNavigate} className="ml-2 text-xs font-medium text-dark-blue">
+                Register
+              </button>
+            </div>
+          </Card>
+        </div>
 
-      {/* Right Section for Images */}
-      <div className="md:w-2/3 hidden md:flex justify-center items-center">
-        {" "}
-        {/* Hidden on mobile */}
-        <div className="flex px-32 ml-24">
-          <div className="w-1/2 flex flex-col justify-between items-right gap-4">
-            <div className="flex">
-              <img src={images.art1} alt="doctor" />
-            </div>
-            <div className="flex">
-              <img src={images.art2} alt="poster1" />
-            </div>
-          </div>
-          <div className="w-1/2 flex my-auto ml-8">
-            <img src={images.art3} alt="doctor" />
+        <div className="md:w-2/3 w-full hidden md:flex justify-center items-center">
+          <div className="grid grid-cols-2 grid-rows-2 gap-4 px-32">
+            <img src={images.art1} alt="doctor" className="" />
+            <img src={images.art2} alt="doctor" className="" />
+            <img src={images.art3} alt="doctor" className="" />
+            <img src={images.logo} alt="doctor" className="my-auto" />
           </div>
         </div>
       </div>
+
+      <Card className="py-4 px-6 rounded-3xl absolute bottom-8 right-8">
+        <Typography className="font-semibold text-lg mb-4 text-center">Test Login</Typography>
+        <div className="flex flex-col gap-2">
+          <Button onClick={() => handleTestLogin("patient")} className="bg-dark-blue rounded-2xl">
+            Patient
+          </Button>
+          <Button onClick={() => handleTestLogin("staff")} className="bg-dark-blue rounded-2xl">
+            Staff Member
+          </Button>
+        </div>
+      </Card>
     </div>
   );
 };

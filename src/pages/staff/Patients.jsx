@@ -1,82 +1,83 @@
-// frontend/src/pages/staff/Patients.jsx
-
-import React, { useState } from 'react';
-import PageTitle from '../../components/pagecomponents/PageTitle'
-import PatientCard from '../../components/pagecomponents/staff/PatientCard'
-import SearchBar from '../../components/pagecomponents/SearchBar'
-import icons from '../../constants/icons';
+import React, { useState, useEffect } from 'react';
+import PageTitle from '../../components/pagecomponents/PageTitle';
+import PatientCard from '../../components/pagecomponents/staff/PatientCard';
+import SearchBar from '../../components/pagecomponents/SearchBar';
+import axios from 'axios';
+import Loader from '../../components/pagecomponents/Loader'; // Import your Loader component
 
 const Patients = () => {
+  const [patients, setPatients] = useState([]);
+  const [filteredPatients, setFilteredPatients] = useState([]);
+  const [loading, setLoading] = useState(true); // Loading state
+
+  const Host_Ip = process.env.Host_Ip || 'http://localhost:8010';
+
+  // Fetch patients when the component loads
+  useEffect(() => {
+    const fetchPatients = async () => {
+      setLoading(true); // Set loading to true before fetching
+      try {
+        const response = await axios.get(`${Host_Ip}/patients/`);
+        setPatients(response.data);
+        setFilteredPatients(response.data); // Initialize filteredPatients with the fetched data
+      } catch (error) {
+        console.error('Error fetching patients:', error);
+      } finally {
+        setLoading(false); // Set loading to false after fetching
+      }
+    };
+    fetchPatients();
+  }, [Host_Ip]);
+
   const handleSearchChange = (event) => {
-    console.log(event.target.value);
+    const searchTerm = event.target.value.toLowerCase();
+    const filtered = patients.filter((patient) =>
+      `${patient.firstName} ${patient.lastName}`.toLowerCase().includes(searchTerm)
+    );
+    setFilteredPatients(filtered);
   };
 
   const handleEdit = (patient) => {
     // Implement edit functionality
-    console.log("Edit patient:", patient);
-};
+    console.log('Edit patient:', patient);
+  };
 
-const handleDelete = (patientIndex) => {
-    // Implement delete functionality
-    const updatedPatients = patients.filter((_, index) => index !== patientIndex);
-    setPatients(updatedPatients);
-};
-
-  // Sample data for patients
-  const [patients, setPatients] = useState([
-    {
-        firstName: "Alice",
-        lastName: "Johnson",
-        profilePic: icons.profilepic,
-        birthday: "1990-01-01",
-        gender: "Female",
-        mobile: "123-456-7890",
-    },
-    {
-        firstName: "Bob",
-        lastName: "Smith",
-        profilePic: icons.profilepic,
-        birthday: "1985-05-12",
-        gender: "Male",
-        mobile: "987-654-3210",
-    },
-    {
-      firstName: "Alice",
-      lastName: "Johnson",
-      profilePic: icons.profilepic,
-      birthday: "1990-01-01",
-      gender: "Female",
-      mobile: "123-456-7890",
-  },
-  {
-      firstName: "Bob",
-      lastName: "Smith",
-      profilePic: icons.profilepic,
-      birthday: "1985-05-12",
-      gender: "Male",
-      mobile: "987-654-3210",
-  },
-]);
+  const handleDelete = async (patientId) => {
+    try {
+      await axios.delete(`${Host_Ip}/patients/${patientId}`);
+      const updatedPatients = patients.filter((patient) => patient._id !== patientId);
+      setPatients(updatedPatients);
+      setFilteredPatients(updatedPatients);
+    } catch (error) {
+      console.error('Error deleting patient:', error);
+    }
+  };
 
   return (
-    <div className='w-full'>
+    <div className="w-full">
       <PageTitle label="Patients" />
-      <SearchBar 
-        placeholder="Search for a Patient..." 
+      <SearchBar
+        placeholder="Search for a Patient..."
         onChange={handleSearchChange}
       />
-      <div className='mt-6 overflow-y-scroll max-h-[70vh]'> {/* Set max height for scrolling */}
-      {patients.map((patient, index) => (
-                <PatientCard
-                    key={index}
-                    patient={patient}
-                    onEdit={() => handleEdit(patient)}
-                    onDelete={() => handleDelete(index)}
-                />
-            ))}
+      <div className="mt-6 overflow-y-scroll max-h-[70vh]">
+        {loading ? (
+          <div className="flex justify-center items-center h-full">
+            <Loader /> {/* Common loader component */}
+          </div>
+        ) : (
+          filteredPatients.map((patient) => (
+            <PatientCard
+              key={patient._id}
+              patient={patient}
+              onEdit={() => handleEdit(patient)}
+              onDelete={() => handleDelete(patient._id)}
+            />
+          ))
+        )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Patients
+export default Patients;
