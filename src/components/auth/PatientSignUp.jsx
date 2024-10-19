@@ -3,11 +3,14 @@ import axios from 'axios';
 import { Card, Typography, Input, Button } from '@material-tailwind/react';
 import { storage } from '../../firebaseConfig';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { useNavigate } from 'react-router-dom';
+
 
 const PatientSignUp = () => {
     const [profilePic, setProfilePic] = useState(null);
     const [profilePicPreview, setProfilePicPreview] = useState('');
-
+    const navigate = useNavigate();
+    
     const [formData, setFormData] = useState({
         username: '',
         password: '',
@@ -17,7 +20,7 @@ const PatientSignUp = () => {
         age: '',
         address: ''
     });
-
+    
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -48,6 +51,7 @@ const PatientSignUp = () => {
             });
 
             alert('Patient registered successfully');
+            navigate('/staff/patients');
         } catch (error) {
             console.error('Error registering patient', error);
         }

@@ -18,6 +18,7 @@ const Patients = () => {
       setLoading(true); // Set loading to true before fetching
       try {
         const response = await axios.get(`${Host_Ip}/patients/`);
+        console.log('Patients:', response.data);
         setPatients(response.data);
         setFilteredPatients(response.data); // Initialize filteredPatients with the fetched data
       } catch (error) {
@@ -55,7 +56,7 @@ const Patients = () => {
 
   return (
     <div className="w-full">
-      <PageTitle label="Patients" />
+      <PageTitle label="Patients" btn={true} btnTitle={'Add Staff'} btnStyle={'bg-green'} link={'/register'}/>
       <SearchBar
         placeholder="Search for a Patient..."
         onChange={handleSearchChange}
