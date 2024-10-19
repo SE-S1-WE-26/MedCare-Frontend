@@ -5,6 +5,7 @@ import icons from '../../constants/icons';
 import { Typography, Button, Dialog, Card, CardBody, CardFooter } from '@material-tailwind/react';
 import PatientHeader from './PatientHeader';
 import StaffHeader from './StaffHeader';
+import AdminHeader from './AdminHeader';
 import { HiOutlineX, HiMenu, HiOutlineLogout } from "react-icons/hi";
 
 const Header = ({ userRole, setUserRole }) => {
@@ -27,6 +28,8 @@ const Header = ({ userRole, setUserRole }) => {
       return <PatientHeader />;
     } else if (userRole === "staff") {
       return <StaffHeader />;
+    }else if (userRole === "admin") {
+      return <AdminHeader />;
     }
     return null;
   };

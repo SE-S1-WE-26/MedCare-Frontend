@@ -43,10 +43,9 @@ const DoctorSignUp = () => {
                 await uploadBytes(storageRef, profilePic);
                 profilePicURL = await getDownloadURL(storageRef);
             }
-
-            await axios.post('/auth/register', {
+            await axios.post('http://localhost:8010/auth/register', {
                 ...formData,
-                role: 'doctor',
+                role: 'staff',
                 image: profilePicURL,
             });
 
@@ -141,6 +140,7 @@ const DoctorSignUp = () => {
                         className="!border-t-blue-gray-200 focus:!border-t-gray-900"
                     />
                 </div>
+                </div>
 
                 {/* Profile Picture Upload */}
                 <div className="flex flex-col items-center">
@@ -167,7 +167,6 @@ const DoctorSignUp = () => {
                     <Typography variant="small" color="gray" className="mt-2 text-center">
                         (Click to upload)
                     </Typography>
-                </div>
                 </div>
 
                 <Button type="submit" className="mt-4 bg-dark-blue rounded-xl">
