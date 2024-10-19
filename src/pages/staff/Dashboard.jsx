@@ -36,6 +36,12 @@ const StaffDashboard = () => {
 
   const sections = [
     {
+      title: "Add New Patient",
+      link: "/staff/patients",
+      color: "bg-dark-blue",
+      icon: icons.profile,
+    },
+    {
       title: "Medical Records",
       link: "/staff/medical-records",
       color: "bg-purple-800",
@@ -127,11 +133,8 @@ const StaffDashboard = () => {
       {/* Right Content Area */}
       <Card className="hidden md:flex w-full md:w-2/3 bg-white rounded-3xl p-8 gap-4">
         <div className="">
-          <Typography
-            color="gray"
-            className="text-4xl font-medium font-poppins flex flex-row"
-          >
-            <p className="text-blue-500 text-5xl font-bold">Caring</p>
+          <Typography color="gray" className="text-4xl font-medium font-poppins flex flex-row">
+            <p className="text-blue-500 text-5xl">Caring</p>
             <p className="ml-3">for patients,</p>
           </Typography>
           <Typography
@@ -144,23 +147,9 @@ const StaffDashboard = () => {
         </div>
         <div className="flex flex-row w-full items-center gap-4 mt-4">
           <div className="w-full">
-            <img src={images.art4} className="h-auto" />
+          <img src={images.art4} className="h-auto"/>
           </div>
-          <div className="flex flex-col gap-4 justify-center">
-            <Card className="p-4 max-w-96 flex flex-row justify-between items-center border-2 border-light-blue px-6">
-              <Typography className="font-semibold text-dark-blue">
-                No. of Users
-              </Typography>
-              <Typography className="font-semibold text-dark-blue text-2xl">
-                10,578
-              </Typography>
-            </Card>
-            <Card className="pt-14 p-8 pr-10 max-w-96 border-2 border-light-blue">
-              <div>
-                <Bar data={chartData} options={chartOptions} />
-              </div>
-            </Card>
-          </div>
+
         </div>
       </Card>
     </div>

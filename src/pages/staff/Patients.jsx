@@ -56,7 +56,7 @@ const Patients = () => {
 
   return (
     <div className="w-full">
-      <PageTitle label="Patients" />
+      <PageTitle label="Patients" btn={true} btnTitle={'Add Staff'} btnStyle={'bg-green'} link={'/register'}/>
       <SearchBar
         placeholder="Search for a Patient..."
         onChange={handleSearchChange}
