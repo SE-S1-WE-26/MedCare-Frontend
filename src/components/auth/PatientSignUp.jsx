@@ -60,7 +60,7 @@ const PatientSignUp = () => {
     return (
         <Card className='p-4 mt-4'>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                <Typography variant="h6" color="blue-gray" className="mb-2 text-lg font-bold">Patient Sign Up</Typography>
+                <Typography variant="h6" color="blue-gray" className="mb-2 text-lg font-bold">Register New Patient</Typography>
 
                 <div>
                     <Typography color="blue-gray" className="mb-2">Username</Typography>
