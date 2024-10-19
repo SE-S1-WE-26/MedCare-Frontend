@@ -6,7 +6,8 @@ const DemographicForm = () => {
   const { patientId } = useParams();
   const navigate = useNavigate(); // Initialize useNavigate
 
-  const Host_Ip = process.env.REACT_APP_HOST_IP || "http://localhost:8010";
+  const user = JSON.parse(localStorage.getItem("userData"));
+  const Host_Ip = process.env.REACT_APP_HOST_IP || "https://medcare-backend.vercel.app";
 
   const [formData, setFormData] = useState({
     userId: patientId,

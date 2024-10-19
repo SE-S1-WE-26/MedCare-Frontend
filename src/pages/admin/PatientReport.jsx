@@ -7,7 +7,7 @@ import html2canvas from "html2canvas";
 const PatientReports = () => {
   const [patientReports, setPatientReports] = useState([]);
 
-  const Host_Ip = process.env.Host_Ip || "http://localhost:8010";
+  const Host_Ip = process.env.Host_Ip || "https://medcare-backend.vercel.app";
 
   // Fetch patient data from DB
   const fetchPatientReports = async () => {

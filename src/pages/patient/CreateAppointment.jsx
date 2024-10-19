@@ -11,7 +11,7 @@ const CreateAppointment = () => {
     console.log(event.target.value);
   };
 
-  const Host_Ip = process.env.Host_Ip|| "http://localhost:8010";
+  const Host_Ip = process.env.Host_Ip|| "https://medcare-backend.vercel.app";
 
   useEffect(() => {
     const fetchDoctorDetails = async () => {

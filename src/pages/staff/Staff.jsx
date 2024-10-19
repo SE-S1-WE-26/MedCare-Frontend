@@ -6,9 +6,43 @@ import axios from 'axios';
 import { Alert } from '@material-tailwind/react';
 
 const Staff = () => {
-  const [doctors, setDoctors] = useState([]);
+  const [doctors, setDoctors] = useState([
+    // {
+    //   name: "Dr. John Doe",
+    //   specialty: "Cardiologist",
+    //   hospital: "Christ Hospital",
+    //   rating: "4.5",
+    //   reviews: "4,442",
+    // },
+    // {
+    //   name: "Dr. Jane Smith",
+    //   specialty: "Dermatologist",
+    //   hospital: "Health First Clinic",
+    //   rating: "4.7",
+    //   reviews: "3,221",
+    // },
+    // {
+    //   name: "Dr. Emily Johnson",
+    //   specialty: "Pediatrician",
+    //   hospital: "Kids Health Center",
+    //   rating: "4.8",
+    //   reviews: "2,712",
+    // },
+    // {
+    //   name: "Dr. Michael Brown",
+    //   specialty: "Orthopedic Surgeon",
+    //   hospital: "Bone & Joint Institute",
+    //   rating: "4.6",
+    //   reviews: "1,542",
+    // },
+    // Add more doctors as needed
+  ]);
 
-  const Host_Ip = process.env.Host_Ip|| "http://localhost:8010";
+
+    
+
+  
+  const Host_Ip = process.env.Host_Ip|| "https://medcare-backend.vercel.app";
 
   const fetchDoctorDetails = async () => {
     try {

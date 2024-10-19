@@ -3,7 +3,7 @@ import { Input, Button } from "@material-tailwind/react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const Host_Ip = process.env.REACT_APP_HOST_IP || "http://localhost:8010";
+const Host_Ip = process.env.REACT_APP_HOST_IP || "https://medcare-backend.vercel.app";
 
 const BiographicForm = () => {
   const { patientId } = useParams();
