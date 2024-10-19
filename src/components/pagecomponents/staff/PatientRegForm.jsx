@@ -64,7 +64,7 @@ const PatientRegForm = () => {
         <div>
             <h1 className="text-2xl font-semibold text-center mb-6 text-gray-700">Register New Patient</h1>
             <Card className='p-4 mt-4'>
-                <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <form onSubmit={handleSubmit} className="flex flex-col md:grid md:grid-cols-2 gap-4">
 
                     {/* Username Field */}
                     <div>

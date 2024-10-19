@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from "react-router-dom";
-import { QRCodeSVG } from "qrcode.react"; // Assuming you're using a QR code library
+import { QRCode } from "react-qr-code";
 import { Card, CardHeader, CardBody, Typography, CardFooter } from "@material-tailwind/react";
 import BackNavigation from "../../components/pagecomponents/BackNavigation";
 import { fetchPatientDetails } from "../../utils/patientUtils";
-import Loader from '../../components/pagecomponents/Loader'
+import Loader from '../../components/pagecomponents/Loader';
 
 const MyQR = () => {
   const user = JSON.parse(localStorage.getItem("userData"));
@@ -35,7 +35,6 @@ const MyQR = () => {
     }
   }, [userId, Host_Ip]);
 
-  // Destructure only if patientDetails is not null
   const firstName = patientDetails?.firstName || "";
   const lastName = patientDetails?.lastName || "";
   const birthday = patientDetails?.birthday || "";
@@ -51,18 +50,18 @@ const MyQR = () => {
   }
 
   return (
-    <div className="w-full flex flex-col"> {/* Set full screen height */}
+    <div className="w-full flex flex-col">
       <BackNavigation label={''} />
       
-      <div className="flex-grow -mt-12 flex items-center justify-center"> {/* Center the card vertically and horizontally */}
-        <Card className="w-full max-w-md"> {/* Restrict the card width */}
+      <div className="flex-grow -mt-12 flex items-center justify-center">
+        <Card className="w-full max-w-md">
           <CardHeader className="px-6 py-3">
-            <Typography size="xl" className="font-poppins font-bold text-center text-2xl"> {/* Centered text and adjusted size */}
+            <Typography size="xl" className="font-poppins font-bold text-center text-2xl">
               My QR Code
             </Typography>
           </CardHeader>
-          <CardBody className="flex flex-col items-center justify-center px-12"> {/* Adjusted to flex-col for better alignment */}
-            <QRCodeSVG value={patientId} size={180} /> {/* You can set a specific size for the QR code */}
+          <CardBody className="flex flex-col items-center justify-center px-12">
+            <QRCode value={patientId} size={180} />
             <Typography color="gray" className="font-poppins font-medium text-center mt-4 text-xs">
               Scan this QR code to access your profile
             </Typography>
