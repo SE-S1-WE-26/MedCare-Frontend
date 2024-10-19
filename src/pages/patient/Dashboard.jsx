@@ -103,6 +103,7 @@ const Dashboard = () => {
           </Typography>
         </div>
         <img src={images.art4} alt="Staff Dashboard" className="max-w-48 md:max-w-64 my-auto absolute bottom-4 right-4 md:bottom-12 md:right-12" />
+
       </Card>
     </div>
   );

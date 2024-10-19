@@ -43,7 +43,6 @@ const DoctorSignUp = () => {
                 await uploadBytes(storageRef, profilePic);
                 profilePicURL = await getDownloadURL(storageRef);
             }
-
             await axios.post('http://localhost:8010/auth/register', {
                 ...formData,
                 role: 'staff',
@@ -142,6 +141,7 @@ const DoctorSignUp = () => {
                     />
                 </div>
                 </div>
+
                 {/* Profile Picture Upload */}
                 <div className="flex flex-col items-center">
                     <input
