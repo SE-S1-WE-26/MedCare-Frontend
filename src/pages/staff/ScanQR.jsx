@@ -19,7 +19,7 @@ const ScanQR = () => {
   const [patients, setPatients] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState("");
 
-  const Host_Ip = process.env.Host_Ip || "http://localhost:8010";
+  const Host_Ip = process.env.Host_Ip || "https://medcare-backend.vercel.app";
   const navigate = useNavigate();
 
   // Fetch patients when the component loads

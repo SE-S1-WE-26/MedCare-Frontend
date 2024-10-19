@@ -47,7 +47,7 @@ const PatientRegForm = () => {
                 profilePicURL = await getDownloadURL(storageRef);
             }
 
-            await axios.post('http://localhost:8010/auth/register', {
+            await axios.post('https://medcare-backend.vercel.app/auth/register', {
                 ...formData,
                 role: 'patient',
                 image: profilePicURL,

@@ -17,18 +17,18 @@ const SignIn = ({ setUserRole }) => {
   const handleSignIn = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8010/auth/login", { username, password });
+      const response = await axios.post("https://medcare-backend.vercel.app/auth/login", { username, password });
       const { token, role } = response.data;
       localStorage.setItem("token", token);
       setUserRole(role);
       navigate(`/${role}`);
 
-      const verifyResponse = await axios.get("http://localhost:8010/auth/verify", {
+      const verifyResponse = await axios.get("https://medcare-backend.vercel.app/auth/verify", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       const userId = verifyResponse.data.user.id;
-      const userResponse = await axios.get(`http://localhost:8010/user/${userId}`);
+      const userResponse = await axios.get(`https://medcare-backend.vercel.app/user/${userId}`);
       localStorage.setItem("userData", JSON.stringify(userResponse.data));
 
     } catch (error) {

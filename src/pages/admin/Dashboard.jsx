@@ -53,7 +53,7 @@ const StaffDashboard = () => {
     <div className="flex flex-1 flex-col w-full gap-8 p-6 bg-gray-50">
       {/* Page Title */}
       <div className="w-full mb-6">
-        <PageTitle label="Staff Dashboard" />
+        <PageTitle label="Health Authority Dashboard" />
       </div>
 
       {/* Overview Cards & Charts Section */}

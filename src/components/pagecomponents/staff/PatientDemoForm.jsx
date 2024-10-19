@@ -8,7 +8,7 @@ const PatientDemoForm = () => {
   console.log('Username:', username);
     const [userDetails, setUserDetails] = useState(null);
 
-  const Host_Ip = process.env.REACT_APP_HOST_IP || "http://localhost:8010";
+  const Host_Ip = process.env.REACT_APP_HOST_IP || "https://medcare-backend.vercel.app";
 
   useEffect(() => {
     const fetchDetails = async () => {

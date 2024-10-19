@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const Host_Ip = "http://localhost:8010";
+const Host_Ip = "https://medcare-backend.vercel.app";
 
 export const fetchPatientDetails = async (userId) => {
   try {
