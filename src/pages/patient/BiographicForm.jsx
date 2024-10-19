@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Input, Button } from "@material-tailwind/react";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Host_Ip = process.env.REACT_APP_HOST_IP || "http://localhost:8010";
 
 const BiographicForm = () => {
+  const { patientId } = useParams();
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("userData"));
 
   const [formData, setFormData] = useState({
-    userId: user._id,
+    userId: patientId,
     bloodGroup: "",
     bmi: "",
     weight: "",
@@ -31,7 +31,7 @@ const BiographicForm = () => {
   useEffect(() => {
     const fetchBioData = async () => {
       try {
-        const response = await axios.get(`${Host_Ip}/patient/biodata/user/${user._id}`);
+        const response = await axios.get(`${Host_Ip}/patient/biodata/user/${patientId}`);
         const bioData = response.data;
 
         // Populate form data if bioData exists
@@ -56,7 +56,7 @@ const BiographicForm = () => {
     };
 
     fetchBioData();
-  }, [user._id]);
+  }, [patientId]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -142,7 +142,7 @@ const BiographicForm = () => {
             setSuccess("Biographic data submitted successfully!");
         }
 
-        navigate("/patient/medical-profile");
+        navigate(`/staff/patient-info/${patientId}`);
     } catch (error) {
         setError(error.message || "Failed to submit the form. Please try again.");
         console.error("Error submitting form:", error);

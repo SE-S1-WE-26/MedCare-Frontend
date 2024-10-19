@@ -54,21 +54,21 @@ const AppRoutes = ({ setUserRole }) => {
       <Route path="/patient/medical-records" element={<MedicalRecords />} />
       <Route path="/patient/lab-reports" element={<LabReports />} />
       <Route path="/patient/medical-profile" element={<MedicalProfile />} />
-      <Route path="/patient/demographic-form" element={<DemographicForm />} />
-      <Route path="/patient/biographic-form" element={<BiographicForm />} />
+      <Route path="/patient/demographic-form/:patientId" element={<DemographicForm />} />
+      <Route path="/patient/biographic-form/:patientId" element={<BiographicForm />} />
       <Route path="/patient/appointments/create-appointment" element={<CreateAppointment />} />
       <Route path="/patient/appointments/appointment-form" element={<AppointmentForm />} />
       <Route path="/patient/payment-form" element={<PaymentForm />} />
 
       <Route path="/staff/scan-qr" element={<ScanQR />} />
       <Route path="/staff/medical-records" element={<StaffMedicalRecords />} />
-      <Route path="/staff/medical-records/create" element={<CreateMedicalRecord />} />
+      <Route path="/staff/medical-records/create/:patientId" element={<CreateMedicalRecord />} />
       <Route path="/staff/appointments" element={<StaffAppointments />} /> 
       <Route path="/staff/checkups" element={<StaffCheckups />} />
       <Route path="/staff/patients" element={<StaffPatients />} />
       <Route path="/staff/staff" element={<StaffStaff />} />
       <Route path="/staff/staff-form" element={<CreateStaff />} />
-      <Route path="/staff/patient-info" element={<PatientInfo />} />
+      <Route path="/staff/patient-info/:patientId" element={<PatientInfo/>} />
 
       <Route path="/admin" element={<AdminDashboard />} />
     </Routes>

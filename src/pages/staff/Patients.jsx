@@ -18,6 +18,7 @@ const Patients = () => {
       setLoading(true); // Set loading to true before fetching
       try {
         const response = await axios.get(`${Host_Ip}/patients/`);
+        console.log('Patients:', response.data);
         setPatients(response.data);
         setFilteredPatients(response.data); // Initialize filteredPatients with the fetched data
       } catch (error) {
@@ -60,7 +61,7 @@ const Patients = () => {
         placeholder="Search for a Patient..."
         onChange={handleSearchChange}
       />
-      <div className="mt-6 overflow-y-scroll max-h-[70vh]">
+      <div className="mt-6 overflow-y-scroll max-h-[70vh] lg:grid lg:grid-cols-2 gap-4">
         {loading ? (
           <div className="flex justify-center items-center h-full">
             <Loader /> {/* Common loader component */}

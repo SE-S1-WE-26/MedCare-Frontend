@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Input, Button } from "@material-tailwind/react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useParams, useNavigate } from "react-router-dom";
 
 const DemographicForm = () => {
+  const { patientId } = useParams();
   const navigate = useNavigate(); // Initialize useNavigate
 
-  const user = JSON.parse(localStorage.getItem("userData"));
   const Host_Ip = process.env.REACT_APP_HOST_IP || "http://localhost:8010";
 
   const [formData, setFormData] = useState({
-    userId: user._id,
+    userId: patientId,
     firstName: "",
     lastName: "",
     birthday: "",
@@ -27,13 +27,13 @@ const DemographicForm = () => {
     // Fetch existing demographic data if available
     const fetchDemographicData = async () => {
       try {
-        const response = await fetch(`${Host_Ip}/patient/demographic/user/${user._id}`);
+        const response = await fetch(`${Host_Ip}/patient/demographic/user/${patientId}`);
         if (response.ok) {
           const data = await response.json();
           // Set the fetched data in the form if available
           if (data) {
             setFormData({
-              userId: user._id,
+              userId: patientId,
               firstName: data.firstName || "",
               lastName: data.lastName || "",
               birthday: data.birthday ? new Date(data.birthday).toISOString().split('T')[0] : "",
@@ -52,7 +52,7 @@ const DemographicForm = () => {
     };
   
     fetchDemographicData();
-  }, [Host_Ip, user._id]);
+  }, [Host_Ip, patientId]);
   
 
   const handleChange = (e) => {
@@ -68,7 +68,7 @@ const DemographicForm = () => {
 
     try {
         // Check if demographic data already exists
-        const checkResponse = await fetch(`${Host_Ip}/patient/demographic/user/${user._id}`);
+        const checkResponse = await fetch(`${Host_Ip}/patient/demographic/user/${patientId}`);
         const existingData = await checkResponse.json();
 
         let response;
@@ -98,7 +98,7 @@ const DemographicForm = () => {
 
         const data = await response.json();
         setSuccess("Demographic data submitted successfully!");
-        navigate("/patient/medical-profile");
+        navigate(`/staff/patient-info/${patientId}`);
     } catch (error) {
         setError("Failed to submit the form. Please try again.");
         console.error("Error:", error);
@@ -106,7 +106,6 @@ const DemographicForm = () => {
         setLoading(false);
     }
 };
-
 
   return (
     <div className="flex flex-1 justify-center items-center flex-col">
@@ -213,9 +212,6 @@ const DemographicForm = () => {
 
             {/* Buttons */}
             <div className="flex justify-center gap-6 pt-6">
-              <Button type="button" color="red" variant="outlined">
-                Cancel
-              </Button>
               <Button type="submit" color="blue" variant="filled" disabled={loading}>
                 {loading ? "Submitting..." : "Submit"}
               </Button>

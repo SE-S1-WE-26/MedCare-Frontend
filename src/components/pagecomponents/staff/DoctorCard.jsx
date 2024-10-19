@@ -17,7 +17,7 @@ const DoctorCard = ({ doctor, onEdit, onDelete }) => {
     // Testing Comment for DoctorCard
 
     return (
-        <Card className='mb-4 px-4 py-6 rounded-3xl flex flex-col sm:flex-row justify-between items-center'>
+        <Card className='mb-4 px-4 py-6 rounded-3xl flex flex-col sm:flex-row justify-between items-center mt-4 sm:mt-0'>
             <div className='flex items-center'>
                 <img src={image} alt='Doctor' className='w-24 h-24 mr-4' />
                 <div>
@@ -33,15 +33,12 @@ const DoctorCard = ({ doctor, onEdit, onDelete }) => {
                     </div>
                 </div>
             </div>
-            <div className='flex gap-2 mt-4 sm:mt-0 sm:mr-6'>
-                <Button onClick={onEdit} color="orange" className="flex items-center">
-                    <HiOutlinePencilAlt className="mr-1" size={20} /> {/* Icon for Edit */}
+            <div className='flex lg:flex-col gap-2 mt-4 sm:mt-0 sm:mr-6'>
+                <Button onClick={onEdit} color="orange" className="flex items-center rounded-full">
+                    <HiOutlinePencilAlt  size={16} /> {/* Icon for Edit */}
                 </Button>
-                <Button onClick={onDelete} color="red" className="flex items-center">
-                    <HiOutlineTrash className="mr-1" size={20} /> {/* Icon for Delete */}
-                </Button>
-                <Button onClick={handleSeeMore} color="blue" className="flex items-center">
-                    <HiOutlineInformationCircle className="mr-1" size={20} /> {/* Icon for See More */}
+                <Button onClick={onDelete} color="red" className="flex items-center rounded-full">
+                    <HiOutlineTrash size={16} /> {/* Icon for Delete */}
                 </Button>
             </div>
         </Card>

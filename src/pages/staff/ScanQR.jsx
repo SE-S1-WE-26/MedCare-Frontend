@@ -1,69 +1,109 @@
-import React, { useState } from "react";
-import { Card, CardHeader, CardBody, Typography, CardFooter, Spinner, Button } from "@material-tailwind/react"; // Import Button
+import React, { useState, useEffect } from "react";
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  Typography,
+  CardFooter,
+  Spinner,
+  Button,
+} from "@material-tailwind/react";
 import BackNavigation from "../../components/pagecomponents/BackNavigation";
-import { QrReader } from "react-qr-reader"; // Using QR reader library
+import { QrReader } from "react-qr-reader";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const ScanQR = () => {
-  const [loading, setLoading] = useState(true); // State to manage loading indicator
-  const [scannedData, setScannedData] = useState(null); // State to store scanned QR data
+  const [loading, setLoading] = useState(true);
+  const [scannedData, setScannedData] = useState(null);
+  const [patients, setPatients] = useState([]);
+  const [selectedPatient, setSelectedPatient] = useState("");
+
+  const Host_Ip = process.env.Host_Ip || "http://localhost:8010";
+  const navigate = useNavigate();
+
+  // Fetch patients when the component loads
+  useEffect(() => {
+    const fetchPatients = async () => {
+      try {
+        const response = await axios.get(`${Host_Ip}/patients/`);
+        setPatients(response.data);
+      } catch (error) {
+        console.error("Error fetching patients:", error);
+      }
+    };
+    fetchPatients();
+  }, [Host_Ip]);
 
   const handleScan = (data) => {
     if (data) {
-      setScannedData(data); // Set the scanned data
-      setLoading(false); // Disable loading when QR code is successfully scanned
-      console.log("QR Code data:", data); // Optionally, log the scanned data
+      setScannedData(data);
+      setLoading(false);
+      console.log("QR Code data:", data);
     }
   };
 
   const handleError = (err) => {
-    console.error("QR scan error:", err); // Handle errors if needed
-    setLoading(false); // Disable loading on error
+    console.error("QR scan error:", err);
+    setLoading(false);
   };
 
-  const navigate = useNavigate();
   const handleNext = () => {
-    // Add your logic for the next action here
-    console.log("Proceeding to the next step with data:", scannedData);
-    navigate(`/staff/patient-info/${scannedData}`); // Navigate to the next page
+    const patientId = scannedData || selectedPatient;
+    if (patientId) {
+      console.log("Proceeding to the next step with data:", patientId);
+      navigate(`/staff/patient-info/${patientId}`);
+    } else {
+      alert("Please scan a QR code or select a patient manually.");
+    }
+  };
 
+  const handlePatientChange = (e) => {
+    setSelectedPatient(e.target.value);
   };
 
   return (
     <div className="w-full">
-      <BackNavigation label={''} />
-      <div className="w-full mt-16 flex items-center justify-center"> {/* Center the card on the page */}
+      <BackNavigation label={""} />
+      <div className="w-full mt-16 flex flex-col items-center justify-center">
         <Card>
           <CardHeader className="px-6 py-3">
-            <Typography size="xl" className="font-poppins font-bold text-center text-2xl">
+            <Typography
+              size="xl"
+              className="font-poppins font-bold text-center text-2xl"
+            >
               Scan QR Code
             </Typography>
           </CardHeader>
-          <CardBody className="flex flex-col items-center justify-center px-12"> {/* Adjusted to flex-col for better alignment */}
+          <CardBody className="flex flex-col items-center justify-center px-12">
             <div className="w-full flex justify-center mb-4">
               <QrReader
                 delay={300}
                 onError={handleError}
                 onScan={handleScan}
-                style={{ width: '100%', height: 'auto' }} // Style for the QR scanner
-                videoStyle={{ height: '100%' }} // Ensure full view of the camera feed
+                style={{ width: "100%", height: "auto" }}
+                videoStyle={{ height: "100%" }}
               />
             </div>
 
-            {/* Show loading spinner until the QR code is read */}
             {loading && (
               <div className="flex justify-center mt-4">
                 <Spinner className="h-8 w-8" color="blue" />
               </div>
             )}
 
-            <Typography color="gray" className="font-poppins font-medium text-center mt-4 text-xs">
+            <Typography
+              color="gray"
+              className="font-poppins font-medium text-center mt-4 text-xs"
+            >
               Point the camera at a QR code to scan
             </Typography>
 
-            {/* Display the scanned data when available */}
             {scannedData && (
-              <Typography color="green" className="font-poppins font-medium text-center mt-4 text-sm">
+              <Typography
+                color="green"
+                className="font-poppins font-medium text-center mt-4 text-sm"
+              >
                 Scanned Data: {scannedData}
               </Typography>
             )}
@@ -71,20 +111,41 @@ const ScanQR = () => {
           <CardFooter className="flex items-center justify-center">
             <Card className="px-6 py-4">
               {loading && (
-                <Typography color="gray" className="font-poppins font-medium text-center text-xs">
+                <Typography
+                  color="gray"
+                  className="font-poppins font-medium text-center text-xs"
+                >
                   Scanning in progress...
                 </Typography>
               )}
-              {/* Next button to proceed after scanning */}
-              <Button 
-                  color="dark-blue" 
-                  onClick={handleNext} 
-                  className="mt-4"
-                >
-                  Next
-                </Button>
             </Card>
           </CardFooter>
+        </Card>
+
+        {/* Patient Selection */}
+        <Card className="mt-4 px-6 py-2 flex flex-row items-center justify-center gap-4">
+          <Typography variant="h6" color="blue-gray" className="mb-2">
+            Select Patient
+          </Typography>
+          <select
+            name="selectedPatient"
+            id="selectedPatient"
+            value={selectedPatient}
+            onChange={handlePatientChange}
+            className="w-full p-2 border border-gray-300 rounded"
+          >
+            <option value="" disabled>
+              Select a patient
+            </option>
+            {patients.map((patient) => (
+              <option key={patient._id} value={patient.userId}>
+                {patient.name}
+              </option>
+            ))}
+          </select>
+          <Button color="dark-blue" onClick={handleNext}>
+            Next
+          </Button>
         </Card>
       </div>
     </div>

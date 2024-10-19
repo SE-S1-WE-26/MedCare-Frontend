@@ -1,145 +1,248 @@
-import React from 'react';
-import BackNavigation from '../../components/pagecomponents/BackNavigation';
-import { Card, CardBody, CardHeader, Typography } from '@material-tailwind/react';
-
-const patientDetails = {
-  profileImage: "https://randomuser.me/api/portraits/med/men/75.jpg",
-  name: "Kusal Perera",
-  bioData: [
-    { label: "Blood Group", value: "O+" },
-    { label: "Weight", value: "60 kg" },
-    { label: "Height", value: "170 cm" },
-    { label: "Allergies", value: "Fexofenadine" },
-  ],
-  demographics: [
-    { label: "Age", value: "23 Years" },
-    { label: "Birthday", value: "01/01/2001" },
-    { label: "Gender", value: "Male" },
-    { label: "Mobile", value: "07123456789" },
-    { label: "Emergency Contact", value: "01178964532" },
-    { label: "Address", value: "Malabe, Colombo" },
-  ],
-};
-
-const appointmentsHistory = [
-  { date: "01/01/2023", condition: "High Blood Pressure", followUp: "01/02/2023" },
-  { date: "15/03/2023", condition: "Annual Check-up", followUp: "15/09/2023" },
-  { date: "10/06/2023", condition: "Cold/Flu", followUp: "20/06/2023" },
-];
-
-const checkupHistory = [
-  { date: "15/01/2023", checkup: "Blood Test", status: "Completed" },
-  { date: "05/02/2023", checkup: "X-Ray", status: "Completed" },
-  { date: "12/03/2023", checkup: "MRI Scan", status: "Pending" },
-];
-
-const renderTableRows = (data) =>
-  data.map((row, index) => (
-    <tr key={index} className="border-b border-blue-gray-100">
-      <td className="p-4 text-sm">{row.date}</td>
-      <td className="p-4 text-sm">{row.condition || row.checkup}</td>
-      <td className="p-4 text-sm">{row.followUp || row.status}</td>
-    </tr>
-  ));
+import React, { useState, useEffect } from "react";
+import { TfiAlignJustify } from "react-icons/tfi";
+import { useParams, useNavigate } from "react-router-dom";
+import { calculateAge } from "../../utils/dateUtils";
+import { fetchPatientDetails } from "../../utils/patientUtils";
+import Loader from "../../components/pagecomponents/Loader";
+import { Card } from "@material-tailwind/react";
+import axios from "axios";
 
 const PatientInfo = () => {
+  const { patientId } = useParams();
+  const [isBioOpen, setIsBioOpen] = useState(true);
+  const [isDemoOpen, setIsDemoOpen] = useState(true);
+  const [patientDetails, setPatientDetails] = useState(null);
+  const [bioData, setBioData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [userDetails, setUserDetails] = useState(null);
+
+  const Host_Ip = process.env.Host_Ip || 'http://localhost:8010';
+
+  const navigate = useNavigate();
+
+  const handleDemographic = () => navigate(`/patient/demographic-form/${patientId}`);
+  const handleBiographic = () => navigate(`/patient/biographic-form/${patientId}`);
+  const handleMedicalRecord = () => navigate(`/staff/medical-records/create/${patientId}`);
+
+
+  const getPatientDetails = async () => {
+    try {
+      const userResponse = await axios.get(`${Host_Ip}/user/${patientId}`);
+      setUserDetails(userResponse.data);
+      const { demographicData, bioData } = await fetchPatientDetails(patientId);
+      setPatientDetails(demographicData);
+      setBioData(bioData);
+      console.log("Patient details:", demographicData);
+    } catch (error) {
+      console.error("Error fetching patient details:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getPatientDetails();
+  }, [patientId]);
+
+
+  if (loading) {
+    return (
+      <div className="w-full flex my-auto items-center justify-center">
+        <Loader />
+      </div>
+    );
+  }
+
+  const { image } = userDetails || {};
+
   return (
-    <div className="w-full p-4">
-      <BackNavigation label="Patient Information" />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Left Column: Profile, Bio Data, Demographics */}
-        <Card className="bg-white p-4 md:p-6 py-12">
-          <CardHeader className="py-4 px-6">
-            <div className="flex items-center space-x-4">
-              <img
-                src={patientDetails.profileImage}
-                alt="Profile"
-                className="w-16 h-16 rounded-full"
-              />
-              <Typography variant="h6" className="text-lg md:text-xl">{patientDetails.name}</Typography>
+    <div className="flex flex-col lg:flex-row lg:w-full w-full gap-5 p-2 lg:p-4 text-foreground text-white">
+      {/* Left Section: Patient Details */}
+      <div className="flex w-full bg-white rounded-lg lg:w-1/3 text-black">
+        <div className="w-full space-y-4 p-4 lg:p-6">
+          <div className="flex space-x-5 items-center justify-center lg:justify-start">
+            <img
+              src={image || "/default-profile.png"}
+              className="w-20 h-20 lg:w-14 lg:h-14 rounded-full"
+              alt="profile"
+            />
+            <p className="font-semibold text-sm">{`${patientDetails?.firstName || ""} ${patientDetails?.lastName || ""}`}</p>
+          </div>
+
+          {/* Bio Data Section */}
+          <div className="border-b border-gray-300 pb-2">
+            <div
+              className="flex justify-between cursor-pointer"
+              onClick={() => setIsBioOpen(!isBioOpen)}
+            >
+              <p className="font-medium pb-2">Bio Data</p>
+              <TfiAlignJustify />
             </div>
-          </CardHeader>
-          <CardBody>
-            <Card className="py-4 px-6 mt-8">
-              <CardHeader className="py-4 px-6">
-                <Typography variant="h6" className="text-lg md:text-xl text-center">
-                  Bio Data
-                </Typography>
-              </CardHeader>
-              <CardBody>
-                <div className="flex flex-col space-y-2">
-                  {patientDetails.bioData.map((item, index) => (
-                    <div key={index} className="flex justify-between">
-                      <Typography className="text-sm md:text-base">{item.label}</Typography>
-                      <Typography className="text-sm md:text-base">{item.value}</Typography>
+            {isBioOpen && (
+              <Card className="p-4 border-2 border-light-blue">
+                <div className="flex lg:flex-row justify-between w-full">
+                  <div className="space-y-2 text-sm lg:text-base w-full">
+                    <div className="flex flex-row justify-between text-xs">
+                      <p>Blood Group:</p>
+                      <p>{bioData?.bloodGroup || "N/A"}</p>
                     </div>
-                  ))}
-                </div>
-              </CardBody>
-            </Card>
-
-            <Card className="py-4 px-6 mt-10 ">
-              <CardHeader className="py-4 px-6">
-                <Typography variant="h6" className="text-lg md:text-xl text-center">
-                  Demographic Information
-                </Typography>
-              </CardHeader>
-              <CardBody>
-                <div className="flex flex-col space-y-2">
-                  {patientDetails.demographics.map((item, index) => (
-                    <div key={index} className="flex justify-between">
-                      <Typography className="text-sm md:text-base">{item.label}</Typography>
-                      <Typography className="text-sm md:text-base">{item.value}</Typography>
+                    <div className="flex flex-row justify-between text-xs">
+                      <p>Weight:</p>
+                      <p>{bioData?.weight ? `${bioData.weight} kg` : "N/A"}</p>
                     </div>
-                  ))}
+                    <div className="flex flex-row justify-between text-xs">
+                      <p>Height:</p>
+                      <p>{bioData?.height ? `${bioData.height} cm` : "N/A"}</p>
+                    </div>
+                    <div className="flex flex-row justify-between text-xs">
+                      <p>BMI:</p>
+                      <p>{bioData?.bmi || "N/A"}</p>
+                    </div>
+                  </div>
                 </div>
-              </CardBody>
-            </Card>
-          </CardBody>
-        </Card>
+              </Card>
+            )}
+          </div>
 
-        {/* Right Column: Appointment and Checkup History */}
-        <div className="space-y-6">
-          <Card className="bg-white p-4 md:p-6 py-12">
-            <CardHeader className="py-4 px-6">
-              <Typography variant="h6" className="text-lg md:text-xl">
-                Appointment History
-              </Typography>
-            </CardHeader>
-            <CardBody>
-              <table className="w-full table-auto text-sm">
-                <thead>
-                  <tr>
-                    <th className="p-4">Date</th>
-                    <th className="p-4">Condition</th>
-                    <th className="p-4">Follow-up Date</th>
-                  </tr>
-                </thead>
-                <tbody>{renderTableRows(appointmentsHistory)}</tbody>
-              </table>
-            </CardBody>
-          </Card>
-
-          <Card className="bg-white p-4 md:p-6 py-12">
-            <CardHeader className="py-4 px-6">
-              <Typography variant="h6" className="text-lg md:text-xl">
-                Checkup History
-              </Typography>
-            </CardHeader>
-            <CardBody>
-              <table className="w-full table-auto text-sm">
-                <thead>
-                  <tr>
-                    <th className="p-4">Date</th>
-                    <th className="p-4">Checkup Type</th>
-                    <th className="p-4">Status</th>
-                  </tr>
-                </thead>
-                <tbody>{renderTableRows(checkupHistory)}</tbody>
-              </table>
-            </CardBody>
-          </Card>
+          {/* Demographic Data Section */}
+          <div className="border-b border-gray-300 pb-2">
+            <div
+              className="flex justify-between cursor-pointer"
+              onClick={() => setIsDemoOpen(!isDemoOpen)}
+            >
+              <p className="font-medium pb-2">Demographic Data</p>
+              <TfiAlignJustify />
+            </div>
+            {isDemoOpen && (
+              <Card className="p-4 border-2 border-light-blue">
+                <div className="flex justify-between w-full">
+                  <div className="space-y-2 text-sm lg:text-base w-full">
+                    <div className="flex flex-row justify-between text-xs">
+                      <p>Age:</p>
+                      <p>
+                        {patientDetails?.birthday
+                          ? calculateAge(patientDetails.birthday)
+                          : "N/A"}
+                      </p>
+                    </div>
+                    <div className="flex flex-row justify-between text-xs">
+                      <p>Birthday:</p>
+                      <p>
+                        {patientDetails?.birthday
+                          ? new Date(patientDetails.birthday).toLocaleDateString()
+                          : "N/A"}
+                      </p>
+                    </div>
+                    <div className="flex flex-row justify-between text-xs">
+                      <p>Gender:</p>
+                      <p>
+                        {patientDetails?.gender === "M"
+                          ? "Male"
+                          : patientDetails?.gender === "F"
+                          ? "Female"
+                          : "N/A"}
+                      </p>
+                    </div>
+                    <div className="flex flex-row justify-between text-xs">
+                      <p>Address:</p>
+                      <p>{patientDetails?.address || "N/A"}</p>
+                    </div>
+                    <div className="flex flex-row justify-between text-xs">
+                      <p>Mobile Number:</p>
+                      <p>{patientDetails?.mobileNumber || "N/A"}</p>
+                    </div>
+                    <div className="flex flex-row justify-between text-xs">
+                      <p>Emergency Contact:</p>
+                      <p>{patientDetails?.emergencyContactNumber || "N/A"}</p>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            )}
+          </div>
         </div>
+      </div>
+
+      {/* Right Section: Special Conditions */}
+      <div className="flex flex-col w-full lg:w-3/4 bg-white text-black rounded-lg p-4 lg:p-6">
+        {bioData && (
+          <>
+            <div className="p-3">
+              <h4 className="font-semibold mb-2">Chronic Conditions</h4>
+              <div className="p-4 lg:p-6 flex flex-wrap gap-2 items-center bg-gray-100 rounded-full text-black text-sm lg:text-base">
+                {bioData.conditions.chronic.length > 0 ? (
+                  bioData.conditions.chronic.map((condition, index) => (
+                    <span
+                      key={index}
+                      className="px-3 py-1 bg-blue-500 text-white rounded-full"
+                    >
+                      {condition}
+                    </span>
+                  ))
+                ) : (
+                  <p>No chronic conditions to show</p>
+                )}
+              </div>
+            </div>
+
+            <div className="p-3">
+              <h4 className="font-semibold mb-2">Surgeries</h4>
+              <div className="p-4 lg:p-6 flex flex-wrap gap-2 items-center bg-gray-100 rounded-full text-black text-sm lg:text-base">
+                {bioData.conditions.surgeries.length > 0 ? (
+                  bioData.conditions.surgeries.map((surgery, index) => (
+                    <span
+                      key={index}
+                      className="px-3 py-1 bg-green-500 text-white rounded-full"
+                    >
+                      {surgery}
+                    </span>
+                  ))
+                ) : (
+                  <p>No surgeries to show</p>
+                )}
+              </div>
+            </div>
+
+            <div className="p-3">
+              <h4 className="font-semibold mb-2">Vaccinations</h4>
+              <div className="p-4 lg:p-6 flex flex-wrap gap-2 items-center bg-gray-100 rounded-full text-black text-sm lg:text-base">
+                {bioData.conditions.vaccinations.length > 0 ? (
+                  bioData.conditions.vaccinations.map((vaccination, index) => (
+                    <span
+                      key={index}
+                      className="px-3 py-1 bg-purple-500 text-white rounded-full"
+                    >
+                      {vaccination}
+                    </span>
+                  ))
+                ) : (
+                  <p>No vaccinations to show</p>
+                )}
+              </div>
+            </div>
+
+            <div className="flex flex-row">
+            <button
+            className="w-full bg-blue-500 text-white rounded-lg font-semibold py-2"
+            onClick={handleMedicalRecord}
+          >
+            Add Medical Record
+          </button>
+            <button
+            className="w-full bg-blue-500 text-white rounded-lg font-semibold py-2"
+            onClick={handleDemographic}
+          >
+            Add Demographic Data
+          </button>
+          <button
+            className="w-full bg-blue-500 text-white rounded-lg font-semibold py-2"
+            onClick={handleBiographic}
+          >
+            Add Biographic Data
+          </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

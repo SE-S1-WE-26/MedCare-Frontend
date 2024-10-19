@@ -6,47 +6,52 @@ import {
   Input,
   Textarea,
 } from "@material-tailwind/react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import PatientInfoCard from "./PatientInfoCard";
 
 const MedicalRecordForm = () => {
+  const { patientId } = useParams();
   const navigate = useNavigate();
 
   // State for form fields
-  const [patients, setPatients] = useState([]);
-  const [selectedPatient, setSelectedPatient] = useState("");
   const [date, setDate] = useState("");
   const [condition, setCondition] = useState("");
   const [notes, setNotes] = useState("");
   const [followUpDate, setFollowUpDate] = useState("");
   const [symptoms, setSymptoms] = useState("");
   const [prescription, setPrescription] = useState("");
+  const [userDetails, setUserDetails] = useState(null);
 
   const Host_Ip = process.env.Host_Ip || "http://localhost:8010";
 
-  // Fetch patients when the component loads
+  const getPatientDetails = async () => {
+    try {
+      const userResponse = await axios.get(`${Host_Ip}/user/${patientId}`);
+      setUserDetails(userResponse.data);
+      console.log("Patient details:", userResponse.data);
+    } catch (error) {
+      console.error("Error fetching patient details:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchPatients = async () => {
-      try {
-        const response = await axios.get(`${Host_Ip}/patients/`);
-        setPatients(response.data);
-      } catch (error) {
-        console.error("Error fetching patients:", error);
-      }
-    };
-    fetchPatients();
-  }, [Host_Ip]);
+    getPatientDetails();
+  }, [patientId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Find the selected patient's information
-    const selectedPatientInfo = patients.find((p) => p._id === selectedPatient);
+    // Ensure userDetails is available
+    if (!userDetails) {
+      console.error("User details not loaded yet");
+      return;
+    }
 
     // Create a new record object
     const newRecord = {
-      userId: selectedPatientInfo.userId,
-      pname: selectedPatientInfo.name,
+      userId: patientId,
+      pname: userDetails.name,
       date,
       condition,
       notes,
@@ -70,35 +75,10 @@ const MedicalRecordForm = () => {
     }
   };
 
-  const handlePatientChange = (e) => {
-    setSelectedPatient(e.target.value);
-  };
-
   return (
     <Card className="p-4 rounded-3xl">
+      <PatientInfoCard patientId={patientId} />
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        {/* Patient Selection */}
-        <div>
-          <Typography variant="h6" color="blue-gray" className="mb-2">
-            Select Patient
-          </Typography>
-          <select
-            name="selectedPatient"
-            id="selectedPatient"
-            value={selectedPatient}
-            onChange={handlePatientChange}
-            className="w-full p-2 border border-gray-300 rounded"
-          >
-            <option value="" disabled>
-              Select a patient
-            </option>
-            {patients.map((patient) => (
-              <option key={patient._id} value={patient._id}>
-                {patient.name}
-              </option>
-            ))}
-          </select>
-        </div>
 
         {/* Medical Record Fields */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
