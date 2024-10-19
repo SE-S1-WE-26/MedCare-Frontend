@@ -6,6 +6,7 @@ const TABLE_HEAD = ["Date", "Condition", "Notes", "Follow-up Date", "Action"];
 
 export function MedicalRecordsTable() {
   const user = JSON.parse(localStorage.getItem("userData"));
+  console.log(user);
   const Host_Ip = process.env.REACT_APP_HOST_IP || "https://medcare-backend.vercel.app";
   
   const [medicalRecords, setMedicalRecords] = useState([]);
