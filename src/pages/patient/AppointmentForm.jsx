@@ -96,7 +96,7 @@ const AppointmentForm = () => {
     }
   
     const appointmentData = {
-      userId: "59b99db4cfa9a34dcd7885b6",
+      userId: userId,
       date: formData.date,
       time: formData.time,
       userName: formData.fullName,
