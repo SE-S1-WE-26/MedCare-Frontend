@@ -37,7 +37,7 @@ const StaffDashboard = () => {
   const sections = [
     {
       title: "Add New Patient",
-      link: "/staff/patients",
+      link: "/register-patient",
       color: "bg-dark-blue",
       icon: icons.profile,
     },
