@@ -96,7 +96,7 @@ export function StaffMedicalRecordsTable() {
                 {
                   _id,
                   date,
-                  pName,
+                  pname,
                   condition,
                   followUpDate,
                   symptoms,
@@ -126,7 +126,7 @@ export function StaffMedicalRecordsTable() {
                           color="blue-gray"
                           className="font-normal font-poppins font-medium"
                         >
-                          {pName}
+                          {pname}
                         </Typography>
                       </td>
                       <td className={classes}>
@@ -204,14 +204,14 @@ export function StaffMedicalRecordsTable() {
                                 <Button
                                   className="mr-2"
                                   color="orange"
-                                  onClick={() => handleEdit(pName)}
+                                  onClick={() => handleEdit(pname)}
                                   aria-label="Edit record"
                                 >
                                   <HiOutlinePencilAlt size={20} />
                                 </Button>
                                 <Button
                                   color="red"
-                                  onClick={() => handleDelete(_id, pName)}
+                                  onClick={() => handleDelete(_id, pname)}
                                   aria-label="Delete record"
                                 >
                                   <HiOutlineTrash size={20} />

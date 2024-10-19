@@ -22,13 +22,16 @@ const AppointmentsTable = () => {
   const [openIndex, setOpenIndex] = useState(null);
   const [appointment, setAppointment] = useState([]);
 
+  const user = JSON.parse(localStorage.getItem("userData"));
+  const userId = user?._id;
+
   const Host_Ip = process.env.Host_Ip || "http://localhost:8010";
 
   const fetchAppointmentDetails = async () => {
     try {
       // Fetch Demographic Data
       const appointmentResponse = await axios.get(
-        `${Host_Ip}/patient/appointments/`
+        `${Host_Ip}/patient/appointments/user/${userId}`
       );
 
       setAppointment(appointmentResponse.data);

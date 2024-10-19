@@ -10,7 +10,7 @@ import { HiOutlineChatAlt2, HiOutlineInformationCircle } from "react-icons/hi";
 import axios from "axios";
 
 // Sample Data
-const TABLE_HEAD = ["Appointment", "Appointment Type", "Appointment", "Action"];
+const TABLE_HEAD = ["Appointment", "Problem", "Appointment", "Action"];
 
 // Function to truncate text
 const truncateText = (text, maxLength) => {
@@ -97,6 +97,7 @@ export function StaffAppointmentsTable() {
                   date,
                   time,
                   problem,
+                  userName,
                   notes,
                   additionalInfo,
                   file,
@@ -134,7 +135,7 @@ export function StaffAppointmentsTable() {
                           color="blue-gray"
                           className="font-normal font-poppins font-medium"
                         >
-                          {doctorType}
+                          {problem}
                         </Typography>
                       </td>
 
@@ -152,15 +153,12 @@ export function StaffAppointmentsTable() {
                       {/* Action Buttons */}
                       <td className={classes}>
                         <div className="flex space-x-4">
-                          <Button color="green" size="sm">
-                            Chat
-                          </Button>
                           <Button
                             onClick={() => handleToggleAccordion(index)}
                             color="blue"
                             size="sm"
                           >
-                            {isOpen ? "See Less" : "See More"}
+                            {isOpen ? "See Less" : <HiOutlineInformationCircle size={20}/>}
                           </Button>
                         </div>
                       </td>
@@ -183,6 +181,19 @@ export function StaffAppointmentsTable() {
                                     className="font-normal font-poppins font-medium"
                                   >
                                     {additionalInfo}
+                                  </Typography>
+                                </div>
+
+                                <div className="col-span-3">
+                                  <strong className="font-bold text-black">
+                                    Full Name:
+                                  </strong>
+                                  <Typography
+                                    variant="small"
+                                    color="blue-gray"
+                                    className="font-normal font-poppins font-medium"
+                                  >
+                                    {userName}
                                   </Typography>
                                 </div>
 

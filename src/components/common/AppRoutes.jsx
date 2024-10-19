@@ -5,6 +5,8 @@ import LandingPage from '../landingpage/LandingPage';
 
 import SignUp from '../auth/SignUp';
 import SignIn from '../auth/SignIn';
+import DoctorSignUp from '../auth/DoctorSignUp';
+import PatientSignUp from '../auth/PatientSignUp';
 
 import PatientDashboard from '../../pages/patient/Dashboard';
 import StaffDashboard from '../../pages/staff/Dashboard';
@@ -36,8 +38,10 @@ const AppRoutes = ({ setUserRole }) => {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
-      <Route path="/signin" element={<SignIn setUserRole={setUserRole} />} /> {/* Pass setUserRole prop */}
-      <Route path="/signup" element={<SignUp />} />
+      <Route path="/signin" element={<SignIn setUserRole={setUserRole} />} />
+      <Route path="/register" element={<SignUp />} />
+      <Route path="/signup/doctor" element={<DoctorSignUp />} />
+      <Route path="/signup/patient" element={<PatientSignUp />} />
 
       <Route path="/patient" element={<PatientDashboard />} />
       <Route path="/staff" element={<StaffDashboard />} />

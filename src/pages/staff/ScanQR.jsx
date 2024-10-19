@@ -25,7 +25,7 @@ const ScanQR = () => {
   const handleNext = () => {
     // Add your logic for the next action here
     console.log("Proceeding to the next step with data:", scannedData);
-    navigate("/staff/patient-info"); // Navigate to the next page
+    navigate(`/staff/patient-info/${scannedData}`); // Navigate to the next page
 
   };
 

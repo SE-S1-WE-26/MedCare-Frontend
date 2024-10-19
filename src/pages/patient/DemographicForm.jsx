@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Input, Button } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const DemographicForm = () => {
   const navigate = useNavigate(); // Initialize useNavigate
 
+  const user = JSON.parse(localStorage.getItem("userData"));
   const Host_Ip = process.env.REACT_APP_HOST_IP || "http://localhost:8010";
 
   const [formData, setFormData] = useState({
-    userId: "59b99db4cfa9a34dcd7885b6", // Example user ID
+    userId: user._id,
     firstName: "",
     lastName: "",
     birthday: "",
@@ -19,8 +20,40 @@ const DemographicForm = () => {
   });
 
   const [loading, setLoading] = useState(false); // For loading state
-  const [error, setError] = useState(null);     // For error messages
+  const [error, setError] = useState(null); // For error messages
   const [success, setSuccess] = useState(null); // For success messages
+
+  useEffect(() => {
+    // Fetch existing demographic data if available
+    const fetchDemographicData = async () => {
+      try {
+        const response = await fetch(`${Host_Ip}/patient/demographic/user/${user._id}`);
+        if (response.ok) {
+          const data = await response.json();
+          // Set the fetched data in the form if available
+          if (data) {
+            setFormData({
+              userId: user._id,
+              firstName: data.firstName || "",
+              lastName: data.lastName || "",
+              birthday: data.birthday ? new Date(data.birthday).toISOString().split('T')[0] : "",
+              gender: data.gender || "",
+              address: data.address || "",
+              mobileNumber: data.mobileNumber || "",
+              emergencyContactNumber: data.emergencyContactNumber || "",
+            });
+          }
+        } else {
+          console.error("Failed to fetch demographic data");
+        }
+      } catch (error) {
+        console.error("Error fetching demographic data:", error);
+      }
+    };
+  
+    fetchDemographicData();
+  }, [Host_Ip, user._id]);
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,37 +62,51 @@ const DemographicForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);  // Start loading
-    setError(null);    // Reset error message
-    setSuccess(null);  // Reset success message
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
 
-    console.log("Form data:", formData);
     try {
-      const response = await fetch(`${Host_Ip}/patient/demographic/add`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+        // Check if demographic data already exists
+        const checkResponse = await fetch(`${Host_Ip}/patient/demographic/user/${user._id}`);
+        const existingData = await checkResponse.json();
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
+        let response;
+        if (checkResponse.ok && existingData) {
+            // Call update endpoint if data exists
+            response = await fetch(`${Host_Ip}/patient/demographic/update`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            });
+        } else {
+            // Call add endpoint if no data exists
+            response = await fetch(`${Host_Ip}/patient/demographic/add`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            });
+        }
 
-      const data = await response.json();
-      setSuccess("Demographic data submitted successfully!"); // Show success message
-      console.log("Response from backend:", data);
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
 
-      // Redirect to home after successful submission
-      navigate("/patient/medical-profile"); // Change this to your home route
+        const data = await response.json();
+        setSuccess("Demographic data submitted successfully!");
+        navigate("/patient/medical-profile");
     } catch (error) {
-      setError("Failed to submit the form. Please try again."); // Show error message
-      console.error("Error:", error);
+        setError("Failed to submit the form. Please try again.");
+        console.error("Error:", error);
     } finally {
-      setLoading(false); // Stop loading
+        setLoading(false);
     }
-  };
+};
+
 
   return (
     <div className="flex flex-1 justify-center items-center flex-col">
@@ -84,6 +131,7 @@ const DemographicForm = () => {
                 label="First Name"
                 name="firstName"
                 placeholder="Enter first name"
+                value={formData.firstName}
                 onChange={handleChange}
                 className="w-full"
                 required
@@ -93,6 +141,7 @@ const DemographicForm = () => {
                 label="Last Name"
                 name="lastName"
                 placeholder="Enter last name"
+                value={formData.lastName}
                 onChange={handleChange}
                 className="w-full"
                 required
@@ -106,12 +155,14 @@ const DemographicForm = () => {
                 variant="outlined"
                 label="Birthday"
                 name="birthday"
+                value={formData.birthday}
                 onChange={handleChange}
                 className="w-full"
                 required
               />
               <select
                 name="gender"
+                value={formData.gender}
                 onChange={handleChange}
                 className="p-2 rounded-md border border-blue-gray-200 outline-none text-gray-600 w-full"
                 required
@@ -128,6 +179,7 @@ const DemographicForm = () => {
               label="Address"
               name="address"
               placeholder="Enter address"
+              value={formData.address}
               onChange={handleChange}
               className="w-full"
               required
@@ -141,6 +193,7 @@ const DemographicForm = () => {
                 type="tel"
                 name="mobileNumber"
                 placeholder="Enter mobile number"
+                value={formData.mobileNumber}
                 onChange={handleChange}
                 className="w-full"
                 required
@@ -151,6 +204,7 @@ const DemographicForm = () => {
                 type="tel"
                 name="emergencyContactNumber"
                 placeholder="Enter emergency contact number"
+                value={formData.emergencyContactNumber}
                 onChange={handleChange}
                 className="w-full"
                 required
