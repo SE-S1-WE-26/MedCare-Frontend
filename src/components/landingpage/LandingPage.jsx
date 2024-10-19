@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Card, Typography } from "@material-tailwind/react";
 import images from "../../constants/images";
 
 const LandingPage = () => {
+
+  useEffect(() => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userData");
+  }, []);
+
   return (
     <div className="w-full flex items-center justify-center px-4 my-auto">
       <Card className="min-h-[500px] w-full justify-center items-center px-8 md:px-12 py-12">
