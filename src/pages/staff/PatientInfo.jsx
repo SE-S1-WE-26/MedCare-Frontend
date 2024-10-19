@@ -4,8 +4,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import { calculateAge } from "../../utils/dateUtils";
 import { fetchPatientDetails } from "../../utils/patientUtils";
 import Loader from "../../components/pagecomponents/Loader";
-import { Card } from "@material-tailwind/react";
+import { Card, CardHeader, Typography } from "@material-tailwind/react";
 import axios from "axios";
+import RecordsTable from "../../components/pagecomponents/patient/RecordTable";
+import { PatientCheckupTable } from "../../components/pagecomponents/patient/CheckupTable";
 
 const PatientInfo = () => {
   const { patientId } = useParams();
@@ -58,7 +60,7 @@ const PatientInfo = () => {
   return (
     <div className="flex flex-col lg:flex-row lg:w-full w-full gap-5 p-2 lg:p-4 text-foreground text-white">
       {/* Left Section: Patient Details */}
-      <div className="flex w-full bg-white rounded-lg lg:w-1/3 text-black">
+      <div className="flex w-full bg-white rounded-lg lg:w-1/4 text-black">
         <div className="w-full space-y-4 p-4 lg:p-6">
           <div className="flex space-x-5 items-center justify-center lg:justify-start">
             <img
@@ -86,15 +88,15 @@ const PatientInfo = () => {
                       <p>Blood Group:</p>
                       <p>{bioData?.bloodGroup || "N/A"}</p>
                     </div>
-                    <div className="flex flex-row justify-between text-xs">
+                    <div className="flex flex-row justify-between text-sm">
                       <p>Weight:</p>
                       <p>{bioData?.weight ? `${bioData.weight} kg` : "N/A"}</p>
                     </div>
-                    <div className="flex flex-row justify-between text-xs">
+                    <div className="flex flex-row justify-between text-sm">
                       <p>Height:</p>
                       <p>{bioData?.height ? `${bioData.height} cm` : "N/A"}</p>
                     </div>
-                    <div className="flex flex-row justify-between text-xs">
+                    <div className="flex flex-row justify-between text-sm">
                       <p>BMI:</p>
                       <p>{bioData?.bmi || "N/A"}</p>
                     </div>
@@ -117,7 +119,7 @@ const PatientInfo = () => {
               <Card className="p-4 border-2 border-light-blue">
                 <div className="flex justify-between w-full">
                   <div className="space-y-2 text-sm lg:text-base w-full">
-                    <div className="flex flex-row justify-between text-xs">
+                    <div className="flex flex-row justify-between text-sm">
                       <p>Age:</p>
                       <p>
                         {patientDetails?.birthday
@@ -125,7 +127,7 @@ const PatientInfo = () => {
                           : "N/A"}
                       </p>
                     </div>
-                    <div className="flex flex-row justify-between text-xs">
+                    <div className="flex flex-row justify-between text-sm">
                       <p>Birthday:</p>
                       <p>
                         {patientDetails?.birthday
@@ -133,7 +135,7 @@ const PatientInfo = () => {
                           : "N/A"}
                       </p>
                     </div>
-                    <div className="flex flex-row justify-between text-xs">
+                    <div className="flex flex-row justify-between text-sm">
                       <p>Gender:</p>
                       <p>
                         {patientDetails?.gender === "M"
@@ -147,11 +149,11 @@ const PatientInfo = () => {
                       <p>Address:</p>
                       <p>{patientDetails?.address || "N/A"}</p>
                     </div>
-                    <div className="flex flex-row justify-between text-xs">
+                    <div className="flex flex-row justify-between text-sm">
                       <p>Mobile Number:</p>
                       <p>{patientDetails?.mobileNumber || "N/A"}</p>
                     </div>
-                    <div className="flex flex-row justify-between text-xs">
+                    <div className="flex flex-row justify-between text-sm">
                       <p>Emergency Contact:</p>
                       <p>{patientDetails?.emergencyContactNumber || "N/A"}</p>
                     </div>
@@ -164,7 +166,27 @@ const PatientInfo = () => {
       </div>
 
       {/* Right Section: Special Conditions */}
-      <div className="flex flex-col w-full lg:w-3/4 bg-white text-black rounded-lg p-4 lg:p-6">
+      <div className="flex flex-col w-full lg:w-1/4 bg-white text-black rounded-lg p-4 lg:p-6">
+      <div className="flex flex-col gap-2 mb-8">
+            <button
+            className="w-full bg-blue-500 text-white rounded-lg font-semibold py-2"
+            onClick={handleMedicalRecord}
+          >
+            Add Medical Record
+          </button>
+            <button
+            className="w-full bg-blue-500 text-white rounded-lg font-semibold py-2"
+            onClick={handleDemographic}
+          >
+            Add Demographic Data
+          </button>
+          <button
+            className="w-full bg-blue-500 text-white rounded-lg font-semibold py-2"
+            onClick={handleBiographic}
+          >
+            Add Biographic Data
+          </button>
+            </div>
         {bioData && (
           <>
             <div className="p-3">
@@ -220,29 +242,22 @@ const PatientInfo = () => {
                 )}
               </div>
             </div>
-
-            <div className="flex flex-row">
-            <button
-            className="w-full bg-blue-500 text-white rounded-lg font-semibold py-2"
-            onClick={handleMedicalRecord}
-          >
-            Add Medical Record
-          </button>
-            <button
-            className="w-full bg-blue-500 text-white rounded-lg font-semibold py-2"
-            onClick={handleDemographic}
-          >
-            Add Demographic Data
-          </button>
-          <button
-            className="w-full bg-blue-500 text-white rounded-lg font-semibold py-2"
-            onClick={handleBiographic}
-          >
-            Add Biographic Data
-          </button>
-            </div>
           </>
         )}
+      </div>
+      <div className="flex flex-col w-full lg:w-2/4 bg-white text-black rounded-lg p-4 lg:p-6 gap-8">
+        <Card className="mt-4 border-2 border-light-blue">
+          <CardHeader className="border-2 border-light-blue px-4 py-2 flex items-center justify-center"><Typography className="text-lg font-poppins font-semibold">Medical Records</Typography></CardHeader>
+          <div className="p-2">
+          <RecordsTable patientId = {patientId}/>
+          </div>
+        </Card>
+        <Card className="mt-4 border-2 border-light-blue">
+          <CardHeader className="border-2 border-light-blue px-4 py-2 flex items-center justify-center"><Typography className="text-lg font-poppins font-semibold">Checkups</Typography></CardHeader>
+          <div className="p-2">
+          <PatientCheckupTable/>
+          </div>
+        </Card>
       </div>
     </div>
   );

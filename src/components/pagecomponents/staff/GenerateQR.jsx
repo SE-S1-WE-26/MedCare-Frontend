@@ -24,7 +24,7 @@ const GenerateQR = () => {
   }
 
   return (
-    <div className="flex flex-1 justify-center items-center flex-col mt-32"> {/* Set full screen height */}
+    <div className="flex flex-1 justify-center items-center flex-col mt-0 sm:mt-12"> {/* Set full screen height */}
       <Card className="w-full max-w-md p-12"> {/* Restrict the card width */}
         <CardHeader className="px-6 py-3">
           <Typography size="xl" className="font-poppins font-bold text-center text-2xl"> {/* Centered text and adjusted size */}
@@ -32,7 +32,7 @@ const GenerateQR = () => {
           </Typography>
         </CardHeader>
         <CardBody className="flex flex-col items-center justify-center px-12"> {/* Adjusted to flex-col for better alignment */}
-          <QRCode value={'124151513513635124124'} size={180} /> {/* Set the size for the QR code */}
+          <QRCode value={'6712ad693ccf4f06602fbe43'} size={180} /> {/* Set the size for the QR code */}
           <Typography color="gray" className="font-poppins font-medium text-center mt-4 text-xs">
             Scan this QR code to access your profile
           </Typography>
