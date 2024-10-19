@@ -14,6 +14,9 @@ import axios from "axios";
 import images from "../../constants/images";
 import { storage } from "../../firebaseConfig";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import loadingAnimation from "../../assets/loading.json"; // Loading animation file
+import successAnimation from "../../assets/success.json";
+import Lottie from "react-lottie";
 
 const AppointmentForm = () => {
   const navigate = useNavigate();
@@ -41,6 +44,25 @@ const AppointmentForm = () => {
   const [fileUrl, setFileUrl] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  const [submissionSuccess, setSubmissionSuccess] = useState(false); // Track success
+
+  // Lottie configurations for loading and success
+  const loadingOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: loadingAnimation,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
+  const successOptions = {
+    loop: false,
+    autoplay: true,
+    animationData: successAnimation,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
   // Validation logic
   // Validation logic
   const validate = () => {
@@ -136,7 +158,10 @@ const AppointmentForm = () => {
       );
       console.log(response.data);
       setSubmitting(false);
-      navigate("/patient/payment-form");
+      setSubmissionSuccess(true);
+      setTimeout(() => {
+        navigate("/patient/payment-form");
+      }, 2000);
     } catch (error) {
       setSubmitting(false);
       console.error("Error creating appointment:", error);
@@ -160,212 +185,229 @@ const AppointmentForm = () => {
           />
         </div>
         <Card className="p-4 md:p-8 rounded-3xl w-full md:w-1/2 flex flex-col justify-between">
-          <form className="lg:mt-12 items-center" onSubmit={handleSubmit}>
-            <div className="flex flex-col gap-4">
-              {/* Appointment Date and Time */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Typography
-                    variant="h6"
-                    color="blue-gray"
-                    className="mb-2 text-sm md:text-base"
-                  >
-                    Appointment Date
-                  </Typography>
-                  <Input
-                    size="xs"
-                    name="date"
-                    value={formData.date}
-                    onChange={handleChange}
-                    type="date"
-                    error={!!errors.date}
-                    className={`!border-t-blue-gray-200 focus:!border-t-gray-900 ${
-                      errors.date ? "border-red-500" : ""
-                    }`}
-                  />
-                  {errors.date && (
-                    <Typography color="red">{errors.date}</Typography>
-                  )}
-                </div>
-                <div>
-                  <Typography
-                    variant="h6"
-                    color="blue-gray"
-                    className="mb-2 text-sm md:text-base"
-                  >
-                    Appointment Time
-                  </Typography>
-                  <Input
-                    size="xs"
-                    name="time"
-                    value={formData.time}
-                    onChange={handleChange}
-                    type="time"
-                    error={!!errors.time}
-                    className={`!border-t-blue-gray-200 focus:!border-t-gray-900 ${
-                      errors.time ? "border-red-500" : ""
-                    }`}
-                  />
-                  {errors.time && (
-                    <Typography color="red">{errors.time}</Typography>
-                  )}
-                </div>
-              </div>
-
-              {/* Full Name and Problem Description */}
-              <div>
-                <Typography
-                  variant="h6"
-                  color="blue-gray"
-                  className="mb-2 text-sm md:text-base"
-                >
-                  Full Name
-                </Typography>
-                <Input
-                  size="lg"
-                  name="fullName"
-                  value={formData.fullName}
-                  onChange={handleChange}
-                  placeholder="Enter your full name"
-                  className={`!border-t-blue-gray-200 focus:!border-t-gray-900 mb-2 ${
-                    errors.fullName ? "border-red-500" : ""
-                  }`}
-                />
-                {errors.fullName && (
-                  <Typography color="red">{errors.fullName}</Typography>
-                )}
-
-                <Typography
-                  variant="h6"
-                  color="blue-gray"
-                  className="mb-2 text-sm md:text-base mt-4"
-                >
-                  Your Problem
-                </Typography>
-                <Textarea
-                  name="problem"
-                  value={formData.problem}
-                  onChange={handleChange}
-                  placeholder="Describe your problem"
-                  className={`!border-t-blue-gray-200 focus:!border-t-blue-gray-900 ${
-                    errors.problem ? "border-red-500" : ""
-                  }`}
-                />
-                {errors.problem && (
-                  <Typography color="red">{errors.problem}</Typography>
-                )}
-                {/* Notes Section */}
-                <Typography
-                  variant="h6"
-                  color="blue-gray"
-                  className="mb-2 text-sm md:text-base mt-4"
-                >
-                  Your Notes
-                </Typography>
-                <Textarea
-                  name="notes"
-                  value={formData.notes}
-                  onChange={handleChange}
-                  placeholder="Enter your notes"
-                  className={`!border-t-blue-gray-200 focus:!border-t-blue-gray-900 ${
-                    errors.notes ? "border-red-500" : ""
-                  }`}
-                />
-                {errors.notes && (
-                  <Typography color="red">{errors.notes}</Typography>
-                )}
-
-                {/* Additional Info Section */}
-                <Typography
-                  variant="h6"
-                  color="blue-gray"
-                  className="mb-2 text-sm md:text-base mt-4"
-                >
-                  Additional Info
-                </Typography>
-                <Textarea
-                  name="additionalInfo"
-                  value={formData.additionalInfo}
-                  onChange={handleChange}
-                  placeholder="Enter additional info"
-                  className={`!border-t-blue-gray-200 focus:!border-t-blue-gray-900 ${
-                    errors.additionalInfo ? "border-red-500" : ""
-                  }`}
-                />
-                {errors.additionalInfo && (
-                  <Typography color="red">{errors.additionalInfo}</Typography>
-                )}
-              </div>
-
-              {/* File Upload Section */}
-              <div className="flex flex-col">
-                <input
-                  type="file"
-                  onChange={handleFileChange}
-                  className="hidden"
-                  id="file-upload"
-                />
-                <Button
-                  className="bg-blue-400 hover:bg-blue-950 text-white rounded-md mt-2"
-                  onClick={() => document.getElementById("file-upload").click()}
-                  fullWidth
-                >
-                  Select File
-                </Button>
-                {errors.file && (
-                  <Typography color="red">{errors.file}</Typography>
-                )}
-                {fileUrl && (
-                  <Typography
-                    variant="small"
-                    color="gray"
-                    className="mt-2 text-center"
-                  >
-                    File uploaded successfully!
-                  </Typography>
-                )}
-              </div>
-
-              {/* Checkbox for Terms and Conditions */}
-              <Checkbox
-                checked={termsAgreed}
-                onChange={handleCheckboxChange}
-                label={
-                  <Typography
-                    variant="small"
-                    color="gray"
-                    className="flex items-center font-normal"
-                  >
-                    I agree to the
-                    <a
-                      href="#"
-                      className="font-medium transition-colors hover:text-gray-900"
-                    >
-                      &nbsp;Terms and Conditions
-                    </a>
-                  </Typography>
-                }
-              />
-
-              {/* Submit Button */}
-              {(!submitting && (
-                <Button
-                  type="submit"
-                  className="mt-2 bg-dark-purple text-white bg-amber-900 rounded-md"
-                  fullWidth
-                >
-                  Continue to Payment
-                </Button>
-              )) || (
-                <Button
-                  className="mt-2 bg-dark-purple text-white bg-amber-300 rounded-md"
-                  fullWidth
-                >
-                  Continue to Payment
-                </Button>
-              )}
+          {/* Show Lottie animation when submitting */}
+          {submitting && !submissionSuccess && (
+            <div className="flex justify-center items-center">
+              <Lottie options={loadingOptions} height={150} width={150} />
             </div>
-          </form>
+          )}
+          {/* Show success animation when submission is successful */}
+          {submissionSuccess && (
+            <div className="flex justify-center items-center">
+              <Lottie options={successOptions} height={150} width={150} />
+            </div>
+          )}
+
+          {!submitting && !submissionSuccess && (
+            <form className="lg:mt-12 items-center" onSubmit={handleSubmit}>
+              <div className="flex flex-col gap-4">
+                {/* Appointment Date and Time */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Typography
+                      variant="h6"
+                      color="blue-gray"
+                      className="mb-2 text-sm md:text-base"
+                    >
+                      Appointment Date
+                    </Typography>
+                    <Input
+                      size="xs"
+                      name="date"
+                      value={formData.date}
+                      onChange={handleChange}
+                      type="date"
+                      error={!!errors.date}
+                      className={`!border-t-blue-gray-200 focus:!border-t-gray-900 ${
+                        errors.date ? "border-red-500" : ""
+                      }`}
+                    />
+                    {errors.date && (
+                      <Typography color="red">{errors.date}</Typography>
+                    )}
+                  </div>
+                  <div>
+                    <Typography
+                      variant="h6"
+                      color="blue-gray"
+                      className="mb-2 text-sm md:text-base"
+                    >
+                      Appointment Time
+                    </Typography>
+                    <Input
+                      size="xs"
+                      name="time"
+                      value={formData.time}
+                      onChange={handleChange}
+                      type="time"
+                      error={!!errors.time}
+                      className={`!border-t-blue-gray-200 focus:!border-t-gray-900 ${
+                        errors.time ? "border-red-500" : ""
+                      }`}
+                    />
+                    {errors.time && (
+                      <Typography color="red">{errors.time}</Typography>
+                    )}
+                  </div>
+                </div>
+
+                {/* Full Name and Problem Description */}
+                <div>
+                  <Typography
+                    variant="h6"
+                    color="blue-gray"
+                    className="mb-2 text-sm md:text-base"
+                  >
+                    Full Name
+                  </Typography>
+                  <Input
+                    size="lg"
+                    name="fullName"
+                    value={formData.fullName}
+                    onChange={handleChange}
+                    placeholder="Enter your full name"
+                    className={`!border-t-blue-gray-200 focus:!border-t-gray-900 mb-2 ${
+                      errors.fullName ? "border-red-500" : ""
+                    }`}
+                  />
+                  {errors.fullName && (
+                    <Typography color="red">{errors.fullName}</Typography>
+                  )}
+
+                  <Typography
+                    variant="h6"
+                    color="blue-gray"
+                    className="mb-2 text-sm md:text-base mt-4"
+                  >
+                    Your Problem
+                  </Typography>
+                  <Textarea
+                    name="problem"
+                    value={formData.problem}
+                    onChange={handleChange}
+                    placeholder="Describe your problem"
+                    className={`!border-t-blue-gray-200 focus:!border-t-blue-gray-900 ${
+                      errors.problem ? "border-red-500" : ""
+                    }`}
+                  />
+                  {errors.problem && (
+                    <Typography color="red">{errors.problem}</Typography>
+                  )}
+                  {/* Notes Section */}
+                  <Typography
+                    variant="h6"
+                    color="blue-gray"
+                    className="mb-2 text-sm md:text-base mt-4"
+                  >
+                    Your Notes
+                  </Typography>
+                  <Textarea
+                    name="notes"
+                    value={formData.notes}
+                    onChange={handleChange}
+                    placeholder="Enter your notes"
+                    className={`!border-t-blue-gray-200 focus:!border-t-blue-gray-900 ${
+                      errors.notes ? "border-red-500" : ""
+                    }`}
+                  />
+                  {errors.notes && (
+                    <Typography color="red">{errors.notes}</Typography>
+                  )}
+
+                  {/* Additional Info Section */}
+                  <Typography
+                    variant="h6"
+                    color="blue-gray"
+                    className="mb-2 text-sm md:text-base mt-4"
+                  >
+                    Additional Info
+                  </Typography>
+                  <Textarea
+                    name="additionalInfo"
+                    value={formData.additionalInfo}
+                    onChange={handleChange}
+                    placeholder="Enter additional info"
+                    className={`!border-t-blue-gray-200 focus:!border-t-blue-gray-900 ${
+                      errors.additionalInfo ? "border-red-500" : ""
+                    }`}
+                  />
+                  {errors.additionalInfo && (
+                    <Typography color="red">{errors.additionalInfo}</Typography>
+                  )}
+                </div>
+
+                {/* File Upload Section */}
+                <div className="flex flex-col">
+                  <input
+                    type="file"
+                    onChange={handleFileChange}
+                    className="hidden"
+                    id="file-upload"
+                  />
+                  <Button
+                    className="bg-blue-400 hover:bg-blue-950 text-white rounded-md mt-2"
+                    onClick={() =>
+                      document.getElementById("file-upload").click()
+                    }
+                    fullWidth
+                  >
+                    Select File
+                  </Button>
+                  {errors.file && (
+                    <Typography color="red">{errors.file}</Typography>
+                  )}
+                  {fileUrl && (
+                    <Typography
+                      variant="small"
+                      color="gray"
+                      className="mt-2 text-center"
+                    >
+                      File uploaded successfully!
+                    </Typography>
+                  )}
+                </div>
+
+                {/* Checkbox for Terms and Conditions */}
+                <Checkbox
+                  checked={termsAgreed}
+                  onChange={handleCheckboxChange}
+                  label={
+                    <Typography
+                      variant="small"
+                      color="gray"
+                      className="flex items-center font-normal"
+                    >
+                      I agree to the
+                      <a
+                        href="#"
+                        className="font-medium transition-colors hover:text-gray-900"
+                      >
+                        &nbsp;Terms and Conditions
+                      </a>
+                    </Typography>
+                  }
+                />
+
+                {/* Submit Button */}
+                {(!submitting && (
+                  <Button
+                    type="submit"
+                    className="mt-2 bg-dark-purple text-white bg-amber-900 rounded-md"
+                    fullWidth
+                  >
+                    Continue to Payment
+                  </Button>
+                )) || (
+                  <Button
+                    className="mt-2 bg-dark-purple text-white bg-amber-300 rounded-md"
+                    fullWidth
+                  >
+                    Continue to Payment
+                  </Button>
+                )}
+              </div>
+            </form>
+          )}
         </Card>
       </div>
     </div>
