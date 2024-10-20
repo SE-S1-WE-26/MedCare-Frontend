@@ -22,6 +22,7 @@ import BiographicForm from '../../pages/patient/BiographicForm';
 import CreateAppointment from '../../pages/patient/CreateAppointment';
 import AppointmentForm from '../../pages/patient/AppointmentForm';
 import PaymentForm from '../../pages/patient/PaymentForm';
+import ServicesForm from '../../pages/patient/ServicesForm';
 
 import ScanQR from '../../pages/staff/ScanQR';
 import StaffPatients from '../../pages/staff/Patients';
@@ -60,6 +61,7 @@ const AppRoutes = ({ setUserRole }) => {
       <Route path="/patient/appointments/create-appointment" element={<CreateAppointment />} />
       <Route path="/patient/appointments/appointment-form" element={<AppointmentForm />} />
       <Route path="/patient/payment-form" element={<PaymentForm />} />
+      <Route path="/patient/services-form/:id" element={<ServicesForm />} />
 
       <Route path="/staff/scan-qr" element={<ScanQR />} />
       <Route path="/staff/medical-records" element={<StaffMedicalRecords />} />

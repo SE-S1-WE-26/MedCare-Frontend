@@ -12,6 +12,10 @@ import master from '../assets/icons/patient/mastercard.png';
 import insurance from '../assets/icons/patient/insurance.png';
 import profilepic from '../assets/icons/patient/profilePic.png';
 import emergency from '../assets/icons/patient/emergency.png';
+import xray from '../assets/icons/patient/x-ray.png';
+import vaccine from '../assets/icons/patient/vaccine.png';
+import bodyScan from '../assets/icons/patient/scan.png';
+import labtest from '../assets/icons/patient/labtest.png';
 
 import appointment from '../assets/icons/staff/appointment.png';
 import checkups from '../assets/icons/staff/checkups.png';
@@ -33,5 +37,9 @@ export default {
     appointment,
     checkups,
     emergency,
-    scan
+    scan,
+    xray,
+    vaccine,
+    labtest,
+    bodyScan
 };
