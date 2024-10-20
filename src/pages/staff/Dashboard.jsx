@@ -126,7 +126,7 @@ const StaffDashboard = () => {
     <div className="flex flex-1 flex-col md:flex-row w-full gap-12">
       {/* Left Menu */}
       <div className="w-full md:w-1/3 rounded-3xl">
-        <PageTitle label="Staff Dashboard" />
+        <PageTitle label="Nurse Dashboard" />
         <div className="w-full flex flex-col gap-6 mt-6">{renderMenu}</div>
       </div>
 

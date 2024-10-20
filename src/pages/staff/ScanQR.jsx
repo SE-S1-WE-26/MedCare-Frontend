@@ -18,6 +18,8 @@ const ScanQR = () => {
   const [scannedData, setScannedData] = useState(null);
   const [patients, setPatients] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState("");
+  const [showPatientSelect, setShowPatientSelect] = useState(false);
+  const [qrSupport, setQrSupport] = useState(true);
 
   const Host_Ip = process.env.Host_Ip || "https://medcare-backend.vercel.app";
   const navigate = useNavigate();
@@ -33,6 +35,14 @@ const ScanQR = () => {
       }
     };
     fetchPatients();
+
+    // Set a timeout for 3 seconds to show the patient select section
+    const timer = setTimeout(() => {
+      setShowPatientSelect(true);
+    }, 3000);
+
+    // Cleanup function to clear the timer
+    return () => clearTimeout(timer);
   }, [Host_Ip]);
 
   const handleScan = (data) => {
@@ -46,6 +56,7 @@ const ScanQR = () => {
   const handleError = (err) => {
     console.error("QR scan error:", err);
     setLoading(false);
+    setQrSupport(false);
   };
 
   const handleNext = () => {
@@ -107,6 +118,15 @@ const ScanQR = () => {
                 Scanned Data: {scannedData}
               </Typography>
             )}
+
+            {!qrSupport && (
+              <Typography
+                color="red"
+                className="font-poppins font-medium text-center mt-4 text-sm"
+              >
+                This browser does not support QR functions.
+              </Typography>
+            )}
           </CardBody>
           <CardFooter className="flex items-center justify-center">
             <Card className="px-6 py-4">
@@ -123,30 +143,35 @@ const ScanQR = () => {
         </Card>
 
         {/* Patient Selection */}
-        <Card className="mt-4 px-6 py-2 flex flex-row items-center justify-center gap-4">
-          <Typography variant="h6" color="blue-gray" className="mb-2">
-            Select Patient
-          </Typography>
-          <select
-            name="selectedPatient"
-            id="selectedPatient"
-            value={selectedPatient}
-            onChange={handlePatientChange}
-            className="w-full p-2 border border-gray-300 rounded"
-          >
-            <option value="" disabled>
-              Select a patient
-            </option>
-            {patients.map((patient) => (
-              <option key={patient._id} value={patient.userId}>
-                {patient.name}
+        {showPatientSelect && (
+          <Card className="mt-4 px-6 py-2 flex flex-col items-center justify-center gap-4">
+            <Typography className="text-red-400 font-semibold">*This browser does not support QR functions*</Typography>
+            <div className="flex flex-row gap-4">
+            <Typography variant="h6" color="blue-gray">
+              Select Patient
+            </Typography>
+            <select
+              name="selectedPatient"
+              id="selectedPatient"
+              value={selectedPatient}
+              onChange={handlePatientChange}
+              className="w-full p-2 border border-gray-300 rounded"
+            >
+              <option value="" disabled>
+                Select a patient
               </option>
-            ))}
-          </select>
-          <Button color="dark-blue" onClick={handleNext}>
-            Next
-          </Button>
-        </Card>
+              {patients.map((patient) => (
+                <option key={patient._id} value={patient.userId}>
+                  {patient.name}
+                </option>
+              ))}
+            </select>
+            <Button color="dark-blue" onClick={handleNext}>
+              Next
+            </Button>
+            </div>
+          </Card>
+        )}
       </div>
     </div>
   );
