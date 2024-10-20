@@ -1,24 +1,50 @@
 import React, { useState, useEffect } from 'react';
 import BackNavigation from "../../components/pagecomponents/BackNavigation";
-import { Card, Typography, Input, Button } from '@material-tailwind/react';
+import { Card, Typography, Input, Button, Dialog, DialogBody } from '@material-tailwind/react';
 import icons from '../../constants/icons';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import axios from 'axios';
+import { FaCheckCircle } from "react-icons/fa";
 
-const PaymentForm = () => {
+const PaymentForm = () => { 
   const navigate = useNavigate();
-  const [activeSection, setActiveSection] = useState('government');
+  const user = JSON.parse(localStorage.getItem("userData"));
+  const [activeSection, setActiveSection] = useState(user.private ? 'private' : 'government');
   const [insuranceSelected, setInsuranceSelected] = useState(false);
   const [selectedPaymentOption, setSelectedPaymentOption] = useState('Visa');
+  const location = useLocation();
+  const bookedServiceData = location.state?.bookedServiceData;
+  const serviceId = bookedServiceData.serviceId;
+  const [service, setService] = useState();
+  const [successAlert, setSuccessAlert] = useState(false);
 
-  const toggleSection = (section) => {
-    setActiveSection(section);
-    if (section === 'private') {
-      setSelectedPaymentOption('Visa');
-    } else {
-      setSelectedPaymentOption(null);
+  // Form State for Payment Fields
+  const [cardNumber, setCardNumber] = useState('');
+  const [cardName, setCardName] = useState('');
+  const [cvv, setCvv] = useState('');
+  const [expirationDate, setExpirationDate] = useState('');
+
+  // Form State for Insurance Fields
+  const [insuranceName, setInsuranceName] = useState('');
+  const [insuranceExpirationDate, setInsuranceExpirationDate] = useState('');
+
+  const fetchService = async () => {
+    try {
+      const response = await fetch(`http://localhost:8010/services/${serviceId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setService(data); // Set the fetched data to state
+      } else {
+        console.error("Failed to fetch service");
+      }
+    } catch (error) {
+      console.error("Error fetching services:", error);
     }
-    setInsuranceSelected(false);
-  };
+  }
+
+  useEffect(() => {
+    fetchService();
+  }, []);
 
   const toggleInsurance = () => {
     setInsuranceSelected(!insuranceSelected);
@@ -44,8 +70,8 @@ const PaymentForm = () => {
 
   const renderPaymentOptions = () => {
     return paymentTypes.map((paymentType, index) => (
-      <button 
-        key={index} 
+      <button
+        key={index}
         className={`w-full sm:w-24 h-12 sm:mr-2 lg:h-14 lg:w-16 p-2 flex items-center justify-center border rounded-lg mb-2
                     ${selectedPaymentOption === paymentType.title ? 'border-black font-bold' : 'border-gray-300'}`}
         onClick={() => handlePaymentOptionClick(paymentType.title)}
@@ -58,7 +84,6 @@ const PaymentForm = () => {
       </button>
     ));
   };
-  
 
   useEffect(() => {
     if (activeSection === 'private') {
@@ -66,29 +91,74 @@ const PaymentForm = () => {
     }
   }, [activeSection]);
 
-  const handleContinue = () => {
-    navigate('/patient/appointments');
+  const handleContinue = async () => {
+    if (bookedServiceData) {
+      try {
+        // Save the booked service data in the database
+        await axios.post(`http://localhost:8010/bookedService/add`, bookedServiceData);
+        console.log('Booked service data saved:', bookedServiceData);
+        setSuccessAlert(true);
+        setTimeout(() => {
+          setSuccessAlert(false);
+          navigate('/patient/services');
+        }, 2500);
+      } catch (error) {
+        console.error("Error saving booked service data:", error);
+      }
+    }
+    // Navigate to services after payment completion
+  };
+
+  // Validation Functions
+  const validateCardNumber = (number) => /^[0-9]{12,}$/.test(number);
+  const validateCardName = (name) => /^[A-Z ]*$/.test(name); // Only uppercase letters and spaces
+  const validateCvv = (cvv) => /^[0-9]{3}$/.test(cvv); // Must be 3 digits
+  const validateExpirationDate = (date) => /^(0[1-9]|1[0-2])\/\d{4}$/.test(date); // MM/YYYY format
+
+  const handleCardNumberChange = (e) => {
+    setCardNumber(e.target.value);
+  };
+
+  const handleCardNameChange = (e) => {
+    const value = e.target.value.toUpperCase();
+    if (validateCardName(value)) {
+      setCardName(value);
+    }
+  };
+
+  const handleCvvChange = (e) => {
+    if (validateCvv(e.target.value)) {
+      setCvv(e.target.value);
+    }
+  };
+
+  const handleExpirationDateChange = (e) => {
+    setExpirationDate(e.target.value);
+  };
+
+  const handleInsuranceExpirationDateChange = (e) => {
+    setInsuranceExpirationDate(e.target.value);
   };
 
   return (
     <div className='w-full px-4 sm:px-6 md:px-8'>
       <BackNavigation label="Proceed Payment" />
-      
-      {/* Toggle Buttons */}
-      <div className='flex w-full justify-center items-center mb-4 sm:flex-row'>
-        <button
-          onClick={() => toggleSection('government')}
-          className={`flex-1 p-2 font-poppins text-sm ${activeSection === 'government' ? 'bg-dark-blue text-white' : 'bg-white text-black'} rounded-l-xl`}
-        >
-          Government
-        </button>
-        <button
-          onClick={() => toggleSection('private')}
-          className={`flex-1 p-2 font-poppins text-sm ${activeSection === 'private' ? 'bg-dark-blue text-white' : 'bg-white text-black'} rounded-r-xl`}
-        >
-          Private
-        </button>
-      </div>
+
+      {/* Success Dialog */}
+      <Dialog open={successAlert} handler={() => setSuccessAlert(false)}>
+        <DialogBody divider className="grid place-items-center gap-4">
+          <FaCheckCircle className='text-3xl' color='green' />
+          <Typography color="green" variant="h4">
+            Success!
+          </Typography>
+          <Typography className="text-center font-normal">
+            Service booked successfully.
+          </Typography>
+          <Button variant="gradient" onClick={() => setSuccessAlert(false)}>
+            Ok, Got it
+          </Button>
+        </DialogBody>
+      </Dialog>
 
       {/* Conditional Rendering of Government Section */}
       {activeSection === 'government' && (
@@ -100,7 +170,7 @@ const PaymentForm = () => {
                   Total Amount to be Paid:
                 </Typography>
                 <Typography color="dark-blue" className="font-poppins text-lg md:text-3xl ml-3 font-bold line-through">
-                  LKR 15,000.00
+                  LKR {service?.amount}.00
                 </Typography>
               </div>
             </Card>
@@ -113,7 +183,7 @@ const PaymentForm = () => {
                 Payment is Free!
               </Typography>
               <Typography color="blue-gray" className="font-poppins text-sm md:text-base mt-2 text-center">
-                As part of the government scheme, no charges are applied for this service. 
+                As part of the government scheme, no charges are applied for this service.
                 You can proceed without any payment.
               </Typography>
               <Button className="mt-6 bg-dark-blue rounded-full" fullWidth onClick={handleContinue}>
@@ -133,7 +203,7 @@ const PaymentForm = () => {
                 Total Amount to be Paid:
               </Typography>
               <Typography color="dark-blue" className="font-poppins text-lg md:text-3xl ml-3 font-bold">
-                LKR 15,000.00
+                LKR {service?.amount}.00
               </Typography>
             </Card>
             <Card className='flex flex-col py-4 px-4 lg:flex-row items-center justify-between'>
@@ -194,7 +264,15 @@ const PaymentForm = () => {
                         size="xs"
                         placeholder="MM/YY"
                         className="!border-t-blue-gray-200 focus:!border-t-gray-900"
+                        onChange={handleInsuranceExpirationDateChange}
+                        className={!validateExpirationDate(insuranceExpirationDate) ? 'border-red-500' : ''}
                       />
+                      {!validateExpirationDate(insuranceExpirationDate) && (
+                        <Typography variant="small" color="red">
+                          Please enter a valid expiration date in MM/YYYY format.
+                        </Typography>
+                      )}
+
                     </div>
                   </div>
                 </div>
@@ -216,7 +294,14 @@ const PaymentForm = () => {
                         size="xs"
                         placeholder="Enter card number"
                         className="!border-t-blue-gray-200 focus:!border-t-gray-900"
+                        onChange={handleCardNumberChange}
+                        className={!validateCardNumber(cardNumber) ? 'border-red-500' : ''}
                       />
+                      {!validateCardNumber(cardNumber) && (
+                        <Typography variant="small" color="red">
+                          Please enter a valid card number with at least 12 digits.
+                        </Typography>
+                      )}
                     </div>
                     <div>
                       <Typography variant="h6" color="blue-gray" className="mb-2 text-sm md:text-base">
@@ -224,9 +309,16 @@ const PaymentForm = () => {
                       </Typography>
                       <Input
                         size="xs"
-                        placeholder="Enter cardholder name"
+                        placeholder="Enter name on card"
                         className="!border-t-blue-gray-200 focus:!border-t-gray-900"
+                        onChange={handleCardNameChange}
+                        className={!validateCardName(cardName) ? 'border-red-500' : ''}
                       />
+                      {!validateCardName(cardName) && (
+                        <Typography variant="small" color="red">
+                          The name on the card can only contain uppercase letters and spaces.
+                        </Typography>
+                      )}
                     </div>
                   </div>
 
@@ -239,21 +331,42 @@ const PaymentForm = () => {
                         size="xs"
                         placeholder="MM/YY"
                         className="!border-t-blue-gray-200 focus:!border-t-gray-900"
+                        onChange={handleExpirationDateChange}
+                        className={!validateExpirationDate(expirationDate) ? 'border-red-500' : ''}
                       />
+                      {!validateExpirationDate(expirationDate) && (
+                        <Typography variant="small" color="red">
+                          Please enter a valid expiration date in MM/YYYY format.
+                        </Typography>
+                      )}
+
                     </div>
                     <div>
                       <Typography variant="h6" color="blue-gray" className="mb-2 text-sm md:text-base">
-                        CVV
+                        CVC
                       </Typography>
                       <Input
                         size="xs"
-                        placeholder="Enter CVV"
-                        className="!border-t-blue-gray-200 focus:!border-t-gray-200"
+                        placeholder="Enter CVC"
+                        className="!border-t-blue-gray-200 focus:!border-t-gray-900"
+                        onChange={handleCvvChange}
+                        className={!validateCvv(cvv) ? 'border-red-500' : ''}
                       />
+                      {!validateCvv(cvv) && (
+                        <Typography variant="small" color="red">
+                          Please enter a valid 3-digit CVC.
+                        </Typography>
+                      )}
+
                     </div>
                   </div>
 
-                  <Button className="mt-2 bg-dark-blue rounded-full" fullWidth onClick={handleContinue}>
+                  <Button
+                    className={`mt-4 bg-dark-blue rounded-full ${selectedPaymentOption ? '' : 'opacity-50 cursor-not-allowed'}`}
+                    fullWidth
+                    onClick={handleContinue}
+                    disabled={!validateCardNumber(cardNumber) || !validateCardName(cardName) || !validateCvv(cvv) || !validateExpirationDate(expirationDate)} // Disable button if no payment option is selected
+                  >
                     Complete Payment
                   </Button>
                 </div>
