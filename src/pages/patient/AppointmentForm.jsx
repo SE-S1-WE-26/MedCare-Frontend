@@ -160,7 +160,7 @@ const AppointmentForm = () => {
       setSubmitting(false);
       setSubmissionSuccess(true);
       setTimeout(() => {
-        navigate("/patient/payment-form");
+        navigate("/patient/appointments");
       }, 2000);
     } catch (error) {
       setSubmitting(false);
