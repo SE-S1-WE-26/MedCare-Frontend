@@ -30,7 +30,7 @@ const PaymentForm = () => {
 
   const fetchService = async () => {
     try {
-      const response = await fetch(`http://localhost:8010/services/${serviceId}`);
+      const response = await fetch(`https://medcare-backend.vercel.app/services/${serviceId}`);
       if (response.ok) {
         const data = await response.json();
         setService(data); // Set the fetched data to state
@@ -95,7 +95,7 @@ const PaymentForm = () => {
     if (bookedServiceData) {
       try {
         // Save the booked service data in the database
-        await axios.post(`http://localhost:8010/bookedService/add`, bookedServiceData);
+        await axios.post(`https://medcare-backend.vercel.app/bookedService/add`, bookedServiceData);
         console.log('Booked service data saved:', bookedServiceData);
         setSuccessAlert(true);
         setTimeout(() => {

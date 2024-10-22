@@ -9,7 +9,7 @@ const ServiceCard = ({serviceId}) => {
 
     const fetchService = async() => {
         try {
-            const response = await fetch(`http://localhost:8010/services/${serviceId}`);
+            const response = await fetch(`https://medcare-backend.vercel.app/services/${serviceId}`);
             if (response.ok) {
                 const data = await response.json();
                 setService(data); // Set the fetched data to state

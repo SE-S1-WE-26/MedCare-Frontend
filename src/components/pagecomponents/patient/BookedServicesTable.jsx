@@ -17,7 +17,7 @@ export function BookedServicesTable() {
     // Fetch booked services
     const fetchBookedServices = async () => {
         try {
-            const response = await fetch(`http://localhost:8010/bookedService/user/${user._id}`);
+            const response = await fetch(`https://medcare-backend.vercel.app/bookedService/user/${user._id}`);
             if (response.ok) {
                 const data = await response.json();
                 setBookedServices(data); // Set the fetched data to state
@@ -53,7 +53,7 @@ export function BookedServicesTable() {
 
     const handleCancelButton = async (id) => {
         try {
-            const response = await axios.delete(`http://localhost:8010/bookedService/${id}`);
+            const response = await axios.delete(`https://medcare-backend.vercel.app/bookedService/${id}`);
             if (response.status === 200) {
                 setSuccessAlert(true);
 

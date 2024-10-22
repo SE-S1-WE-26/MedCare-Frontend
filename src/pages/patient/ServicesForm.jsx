@@ -89,7 +89,7 @@ export default function ServicesForm() {
                 // Check payment method and handle accordingly
                 if (formData.paymentMethod === "Cash") {
                     // Save data if payment is by cash
-                    const response = await axios.post(`http://localhost:8010/bookedService/add`, bookedServiceData);
+                    const response = await axios.post(`https://medcare-backend.vercel.app/bookedService/add`, bookedServiceData);
                     console.log(response.data);
                     setSuccessAlert(true);
 
